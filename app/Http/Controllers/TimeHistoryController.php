@@ -64,7 +64,10 @@ class TimeHistoryController extends Controller
 		    ]);
         }
         
-     	return 'puut';
+		CourseClass::where('course_id','=','48')->where('user_id', '=', '1')->update([
+			'video_completed_time'  => \Carbon\Carbon::now()->toDateTimeString()
+		]);
+     	return $movie_id.' = '.$user_id.' = '.$endtime;
 	}
  
 }    
