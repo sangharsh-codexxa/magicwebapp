@@ -1,23 +1,23 @@
-@extends('theme.master')
-@section('title', "$course->title")
-@section('content')
-@include('admin.message')
-{{-- @include('sweetalert::alert') --}}
+
+<?php $__env->startSection('title', "$course->title"); ?>
+<?php $__env->startSection('content'); ?>
+<?php echo $__env->make('admin.message', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+
 <!-- courses content header start -->
 <section id="class-nav" class="class-nav-block">
     <div class="container-xl">
         <div class="row">
             <div class="col-lg-7 col-md-6 col-12">
-               <div class="class-nav-heading">{{ $course->title }}</div>
+               <div class="class-nav-heading"><?php echo e($course->title); ?></div>
             </div>
             <div class="col-lg-5 col-md-6 col-12">
                 <div class="class-button certificate-button">
                     <ul>
-                        @if($gsetting->certificate_enable == 1)
-                        @if($course->certificate_enable == 1)
+                        <?php if($gsetting->certificate_enable == 1): ?>
+                        <?php if($course->certificate_enable == 1): ?>
                         <li>
                             <div class="dropdown">
-                                @if(!empty($progress))
+                                <?php if(!empty($progress)): ?>
                                     <?php
                                     $total_class = $progress->all_chapter_id;
                                     $total_count = count($total_class);
@@ -36,19 +36,21 @@
                                     // $progres = ($read_count/$total_count) * 100;
                                     ?>
 
-                                @endif
+                                <?php endif; ?>
                               <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-trophy"></i>&nbsp; {{ __('Get Certificate') }}
+                                <i class="fas fa-trophy"></i>&nbsp; <?php echo e(__('Get Certificate')); ?>
+
                               </button>
                               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                @if(!empty($progress))
+                                <?php if(!empty($progress)): ?>
                                 <a class="dropdown-item"> 
-                                    {{ $read_count }} {{ __('of') }} {{ $total_count }}  {{ __('complete') }}
+                                    <?php echo e($read_count); ?> <?php echo e(__('of')); ?> <?php echo e($total_count); ?>  <?php echo e(__('complete')); ?>
+
                                 </a>
-                                @else
+                                <?php else: ?>
                                 <a class="dropdown-item"> 
-                                    0 {{ __('of') }} 
-                                    @php
+                                    0 <?php echo e(__('of')); ?> 
+                                    <?php
                                         $data = App\CourseChapter::where('course_id', $course->id)->count();
                                         if($data>0){
 
@@ -58,29 +60,29 @@
 
                                             echo "0";
                                         }
-                                    @endphp 
-                                    {{ __('complete')}} 
+                                    ?> 
+                                    <?php echo e(__('complete')); ?> 
                                 </a>
-                                @endif
-                                @if(!empty($progress))
-                                    @if($read_count == $total_count)
+                                <?php endif; ?>
+                                <?php if(!empty($progress)): ?>
+                                    <?php if($read_count == $total_count): ?>
                                     <div class="about-home-btn">
 
-                                        @php
+                                        <?php
                                         $random = $progress->id.'CR-'.uniqid();
-                                        @endphp
+                                        ?>
                                         
-                                        <a href="{{ route('certificate.show',['slug' => $random ]) }}" class="btn btn-secondary" href="#">{{ __('Get Certificate')}}</a>
+                                        <a href="<?php echo e(route('certificate.show',['slug' => $random ])); ?>" class="btn btn-secondary" href="#"><?php echo e(__('Get Certificate')); ?></a>
                                     </div>
-                                    @endif
-                                @endif
+                                    <?php endif; ?>
+                                <?php endif; ?>
                               </div>
                             </div>
                         </li>
-                        @endif
-                        @endif
+                        <?php endif; ?>
+                        <?php endif; ?>
                         <li>
-                            <a href="{{ route('user.course.show',['id' => $course->id, 'slug' => $course->slug ]) }}" class="course_btn"> {{ __('Course details') }} <i class="fa fa-chevron-right"></i></a>
+                            <a href="<?php echo e(route('user.course.show',['id' => $course->id, 'slug' => $course->slug ])); ?>" class="course_btn"> <?php echo e(__('Course details')); ?> <i class="fa fa-chevron-right"></i></a>
                         </li>
                     </ul>
                 </div>
@@ -95,13 +97,13 @@
                 <div class="learning-courses-home-video text-white btm-30">
                     <div class="video-item hidden-xs">
                         <div class="video-device">
-                            @if($course['preview_image'] !== NULL && $course['preview_image'] !== '')
-                                <img src="{{ asset('images/course/'.$course->preview_image) }}" class="img-fluid" alt="Background">
-                            @else
-                                <img src="{{ Avatar::create($course->title)->toBase64() }}" class="bg_img img-fluid" alt="Background">
-                            @endif
+                            <?php if($course['preview_image'] !== NULL && $course['preview_image'] !== ''): ?>
+                                <img src="<?php echo e(asset('images/course/'.$course->preview_image)); ?>" class="img-fluid" alt="Background">
+                            <?php else: ?>
+                                <img src="<?php echo e(Avatar::create($course->title)->toBase64()); ?>" class="bg_img img-fluid" alt="Background">
+                            <?php endif; ?>
                             <div class="video-preview">
-                                @php
+                                <?php
                                     //if empty 
                                     $z = 0;
 
@@ -124,30 +126,30 @@
                                         $z = 1;
                                     }
                                 
-                                @endphp
+                                ?>
 
                                
-                                @if(isset($items))
-                                    @if(isset($course->chapter[0]->courseclass[0]))
+                                <?php if(isset($items)): ?>
+                                    <?php if(isset($course->chapter[0]->courseclass[0])): ?>
 
-                                    @if($course->chapter[0]->courseclass[0]->type == "video" || $course->chapter[0]->courseclass[0]->type == "audio") 
-                                    @if(isset($course->chapter[0]->courseclass[0])) 
-                                        @if($course->chapter[0]->courseclass[0]->iframe_url == NULL)
+                                    <?php if($course->chapter[0]->courseclass[0]->type == "video" || $course->chapter[0]->courseclass[0]->type == "audio"): ?> 
+                                    <?php if(isset($course->chapter[0]->courseclass[0])): ?> 
+                                        <?php if($course->chapter[0]->courseclass[0]->iframe_url == NULL): ?>
                                             
-                                            <a href="{{ route('watchcourse',$course->id) }}" class="btn-video-play @if($z == 0)iframe @endif"><i class="fa fa-play"></i></a>
-                                        @else
+                                            <a href="<?php echo e(route('watchcourse',$course->id)); ?>" class="btn-video-play <?php if($z == 0): ?>iframe <?php endif; ?>"><i class="fa fa-play"></i></a>
+                                        <?php else: ?>
                                        
-                                            @php
+                                            <?php
                                                 $url = Crypt::encrypt($course->chapter[0]->courseclass[0]->iframe_url);
-                                            @endphp
-                                            <a href="{{ route('watchinframe',[$url, 'course_id' => $course->id]) }}" class="btn-video-play"><i class="fa fa-play"></i></a>
-                                        @endif
-                                    @else
-                                        <a href="{{ route('watchcourse',$course->id) }}" class="btn-video-play @if($z == 0)iframe @endif"><i class="fa fa-play"></i></a>
-                                    @endif
-                                    @endif
-                                    @endif
-                                @endif    
+                                            ?>
+                                            <a href="<?php echo e(route('watchinframe',[$url, 'course_id' => $course->id])); ?>" class="btn-video-play"><i class="fa fa-play"></i></a>
+                                        <?php endif; ?>
+                                    <?php else: ?>
+                                        <a href="<?php echo e(route('watchcourse',$course->id)); ?>" class="btn-video-play <?php if($z == 0): ?>iframe <?php endif; ?>"><i class="fa fa-play"></i></a>
+                                    <?php endif; ?>
+                                    <?php endif; ?>
+                                    <?php endif; ?>
+                                <?php endif; ?>    
                             </div>
                         </div>
                     </div>
@@ -155,20 +157,20 @@
             </div>
             <div class="col-lg-8 col-md-8">
                 <div class="learning-courses-home-block">
-                    <h3 class="learning-courses-home-heading btm-20"><a href="{{ route('user.course.show',['id' => $course->id, 'slug' => $course->slug ]) }}" title="heading">{{ $course->title }}</a></h3>
-                    <div class="learning-courses btm-20 display-inline">{{ $course->user->fname }}</div>
+                    <h3 class="learning-courses-home-heading btm-20"><a href="<?php echo e(route('user.course.show',['id' => $course->id, 'slug' => $course->slug ])); ?>" title="heading"><?php echo e($course->title); ?></a></h3>
+                    <div class="learning-courses btm-20 display-inline"><?php echo e($course->user->fname); ?></div>
 
-                    @if($course->user->vacation_start == !NULL)
-                    <span class="vacation-days text-white">({{ __('On Vacation')}})
-                        <button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="top" data-html="true" title="{{ date('d-m-Y | h:i:s A',strtotime($course->user->vacation_start)) }} to {{ date('d-m-Y | h:i:s A',strtotime($course->user->vacation_end)) }}"><i class="fas fa-info-circle"></i></button>
+                    <?php if($course->user->vacation_start == !NULL): ?>
+                    <span class="vacation-days text-white">(<?php echo e(__('On Vacation')); ?>)
+                        <button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="top" data-html="true" title="<?php echo e(date('d-m-Y | h:i:s A',strtotime($course->user->vacation_start))); ?> to <?php echo e(date('d-m-Y | h:i:s A',strtotime($course->user->vacation_end))); ?>"><i class="fas fa-info-circle"></i></button>
 
                     </span>)
-                    @endif
+                    <?php endif; ?>
                     <br>
 
-                    <div class="learning-courses btm-20">{{ $course->short_detail }}</div>
+                    <div class="learning-courses btm-20"><?php echo e($course->short_detail); ?></div>
 
-                    @if(!empty($progress))
+                    <?php if(!empty($progress)): ?>
                         <?php
                         $total_class = $progress->all_chapter_id;
                         $total_count = count($total_class);
@@ -195,7 +197,7 @@
                         </div>
                         <i class="fa fa-trophy lft-7"></i>
                     </div>
-                    @else
+                    <?php else: ?>
                     <div class="progress-block">
                         <div class="one histo-rate">
                             <span class="bar-block" style="width: 100%">
@@ -204,32 +206,32 @@
                         </div>
                         <i class="fa fa-trophy lft-7"></i>
                     </div>
-                    @endif
+                    <?php endif; ?>
                     
-                    @if(isset($items))
-                        @if(isset($course->chapter[0]->courseclass[0]))
-                        @if($course->chapter[0]->courseclass[0]->type == "video" || $course->chapter[0]->courseclass[0]->type == "audio")
-                        @if(isset($course->chapter[0]->courseclass[0]))
-                            @if($course->chapter[0]->courseclass[0]->iframe_url == NULL)
+                    <?php if(isset($items)): ?>
+                        <?php if(isset($course->chapter[0]->courseclass[0])): ?>
+                        <?php if($course->chapter[0]->courseclass[0]->type == "video" || $course->chapter[0]->courseclass[0]->type == "audio"): ?>
+                        <?php if(isset($course->chapter[0]->courseclass[0])): ?>
+                            <?php if($course->chapter[0]->courseclass[0]->iframe_url == NULL): ?>
                             <div class="learning-courses-home-btn">
-                                <a href="{{ route('watchcourse',$course->id) }}" class="@if($z == 0)iframe @endif btn btn-primary" title="Continue">{{ __('Continue to Lecture') }}</a>
+                                <a href="<?php echo e(route('watchcourse',$course->id)); ?>" class="<?php if($z == 0): ?>iframe <?php endif; ?> btn btn-primary" title="Continue"><?php echo e(__('Continue to Lecture')); ?></a>
                             </div>
-                            @else
+                            <?php else: ?>
                             <div class="learning-courses-home-btn">
-                                @php
+                                <?php
                                     $url = Crypt::encrypt($course->chapter[0]->courseclass[0]->iframe_url);
-                                @endphp
-                                <a href="{{ route('watchinframe',[$url, 'course_id' => $course->id]) }}" class="btn btn-primary" title="Continue">{{ __('Continue to Lecture') }}</a>
+                                ?>
+                                <a href="<?php echo e(route('watchinframe',[$url, 'course_id' => $course->id])); ?>" class="btn btn-primary" title="Continue"><?php echo e(__('Continue to Lecture')); ?></a>
                             </div>
-                            @endif
-                        @else
+                            <?php endif; ?>
+                        <?php else: ?>
                             <div class="learning-courses-home-btn">
-                                <a href="{{ route('watchcourse',$course->id) }}" class="@if($z == 0)iframe @endif btn btn-primary" title="Continue">{{ __('Continue to Lecture') }}</a>
+                                <a href="<?php echo e(route('watchcourse',$course->id)); ?>" class="<?php if($z == 0): ?>iframe <?php endif; ?> btn btn-primary" title="Continue"><?php echo e(__('Continue to Lecture')); ?></a>
                             </div>
-                        @endif
-                        @endif
-                        @endif
-                    @endif
+                        <?php endif; ?>
+                        <?php endif; ?>
+                        <?php endif; ?>
+                    <?php endif; ?>
 
 
                 </div>
@@ -246,41 +248,41 @@
             <nav>
                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
 
-                    <a class="nav-item nav-link active text-center" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Overview') }}</a>
+                    <a class="nav-item nav-link active text-center" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true"><?php echo e(__('Overview')); ?></a>
 
-                    <a class="nav-item nav-link text-center" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">{{ __('Course Content') }}</a>
+                    <a class="nav-item nav-link text-center" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false"><?php echo e(__('Course Content')); ?></a>
 
-                    <a class="nav-item nav-link text-center" id="nav-live-tab" data-toggle="tab" href="#nav-live" role="tab" aria-controls="nav-live" aria-selected="false">{{ __('Live Class') }}</a>
+                    <a class="nav-item nav-link text-center" id="nav-live-tab" data-toggle="tab" href="#nav-live" role="tab" aria-controls="nav-live" aria-selected="false"><?php echo e(__('Live Class')); ?></a>
 
-                    <a class="nav-item nav-link text-center" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">{{ __('Q & A') }}</a>
+                    <a class="nav-item nav-link text-center" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false"><?php echo e(__('Q & A')); ?></a>
 
-                    @if(count($announsments) > 0)
-                    <a class="nav-item nav-link text-center" id="nav-announcement-tab" data-toggle="tab" href="#nav-announcement" role="tab" aria-controls="nav-announcement" aria-selected="false">{{ __('Announcements') }}</a>
-                    @endif
+                    <?php if(count($announsments) > 0): ?>
+                    <a class="nav-item nav-link text-center" id="nav-announcement-tab" data-toggle="tab" href="#nav-announcement" role="tab" aria-controls="nav-announcement" aria-selected="false"><?php echo e(__('Announcements')); ?></a>
+                    <?php endif; ?>
 
 
-                    <a class="nav-item nav-link text-center" id="nav-quiz-tab" data-toggle="tab" href="#nav-quiz" role="tab" aria-controls="nav-quiz" aria-selected="false">{{ __('Quiz') }}</a>
+                    <a class="nav-item nav-link text-center" id="nav-quiz-tab" data-toggle="tab" href="#nav-quiz" role="tab" aria-controls="nav-quiz" aria-selected="false"><?php echo e(__('Quiz')); ?></a>
 
-                    @if($gsetting->assignment_enable == 1)
-                    @if($course->assignment_enable == 1)
-                    <a class="nav-item nav-link text-center" id="nav-assign-tab" data-toggle="tab" href="#nav-assign" role="tab" aria-controls="nav-assign" aria-selected="false">{{ __('Assignment') }}</a>
-                    @endif
-                    @endif
+                    <?php if($gsetting->assignment_enable == 1): ?>
+                    <?php if($course->assignment_enable == 1): ?>
+                    <a class="nav-item nav-link text-center" id="nav-assign-tab" data-toggle="tab" href="#nav-assign" role="tab" aria-controls="nav-assign" aria-selected="false"><?php echo e(__('Assignment')); ?></a>
+                    <?php endif; ?>
+                    <?php endif; ?>
                     
-                    @if($gsetting->appointment_enable == 1)
-                    @if($course->appointment_enable == 1)
-                    <a class="nav-item nav-link text-center" id="nav-appoint-tab" data-toggle="tab" href="#nav-appoint" role="tab" aria-controls="nav-appoint" aria-selected="false">{{ __('Appointment') }}</a>
-                    @endif
-                    @endif
+                    <?php if($gsetting->appointment_enable == 1): ?>
+                    <?php if($course->appointment_enable == 1): ?>
+                    <a class="nav-item nav-link text-center" id="nav-appoint-tab" data-toggle="tab" href="#nav-appoint" role="tab" aria-controls="nav-appoint" aria-selected="false"><?php echo e(__('Appointment')); ?></a>
+                    <?php endif; ?>
+                    <?php endif; ?>
                     
 
-                    @if(count($papers) > 0)
-                    <a class="nav-item nav-link text-center" id="nav-paper-tab" data-toggle="tab" href="#nav-paper" role="tab" aria-controls="nav-paper" aria-selected="false">{{ __('Previous Papers') }}</a>
-                    @endif
+                    <?php if(count($papers) > 0): ?>
+                    <a class="nav-item nav-link text-center" id="nav-paper-tab" data-toggle="tab" href="#nav-paper" role="tab" aria-controls="nav-paper" aria-selected="false"><?php echo e(__('Previous Papers')); ?></a>
+                    <?php endif; ?>
 
-                    @if(Module::has('Homework') && Module::find('Homework')->isEnabled())
-                        @include('homework::front.icon')
-                    @endif
+                    <?php if(Module::has('Homework') && Module::find('Homework')->isEnabled()): ?>
+                        <?php echo $__env->make('homework::front.icon', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+                    <?php endif; ?>
 
                 </div>
             </nav>
@@ -288,50 +290,52 @@
             <div class="tab-content" id="nav-tabContent">
                 <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
                     <div class="overview-block">
-                        <h4>{{ __('Recent Activity') }}</h4>
+                        <h4><?php echo e(__('Recent Activity')); ?></h4>
                         <div class="row">
                             <div class="col-lg-6 col-md-6">
                                 <div class="learning-questions-block btm-40">
-                                    <h5 class="learning-questions-heading">{{ __('Recent Questions') }}</h5>
+                                    <h5 class="learning-questions-heading"><?php echo e(__('Recent Questions')); ?></h5>
 
-                                    @if($coursequestions->isEmpty())
+                                    <?php if($coursequestions->isEmpty()): ?>
                                         <div class="learning-questions-content text-center">
-                                            <h3 class="text-center">{{ __('No') }} {{ __('Recent Questions') }}</h3>
+                                            <h3 class="text-center"><?php echo e(__('No')); ?> <?php echo e(__('Recent Questions')); ?></h3>
                                         </div>
-                                    @else
+                                    <?php else: ?>
                                        
-                                        @foreach($coursequestions->take(2) as $question)
+                                        <?php $__currentLoopData = $coursequestions->take(2); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $question): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                         <div class="learning-questions-dtl-block">
-                                            <div class="learning-questions-img rgt-20">{{ str_limit(optional($question->user)->fname, $limit = 1, $end = '') }}{{ str_limit(optional($question->user)->lname, $limit = 1, $end = '') }}</div>
-                                            <div class="learning-questions-dtl">{!! $question->question !!}
+                                            <div class="learning-questions-img rgt-20"><?php echo e(str_limit(optional($question->user)->fname, $limit = 1, $end = '')); ?><?php echo e(str_limit(optional($question->user)->lname, $limit = 1, $end = '')); ?></div>
+                                            <div class="learning-questions-dtl"><?php echo $question->question; ?>
+
                                             </div>
                                         </div>
-                                        @endforeach
-                                    @endif
-                                    <div class="learning-questions-heading"><a href="#" id="goTab4" title="browse">{{ __('Browse questions') }}</a>
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                    <?php endif; ?>
+                                    <div class="learning-questions-heading"><a href="#" id="goTab4" title="browse"><?php echo e(__('Browse questions')); ?></a>
                                     </div>
                                 </div>
                             </div>
-                            @if(count($announsments) > 0)
+                            <?php if(count($announsments) > 0): ?>
                             <div class="col-lg-6 col-md-6">
                                 <div class="learning-questions-block btm-40">
-                                    <h5 class="learning-questions-heading">{{ __('Recent Announcements') }}</h5>
-                                    @if($announsments->isEmpty())
+                                    <h5 class="learning-questions-heading"><?php echo e(__('Recent Announcements')); ?></h5>
+                                    <?php if($announsments->isEmpty()): ?>
                                         <div class="learning-questions-content text-center">
-                                            <h3 class="text-center">{{ __('No') }} {{ __('Recent Announcements') }}</h3>
+                                            <h3 class="text-center"><?php echo e(__('No')); ?> <?php echo e(__('Recent Announcements')); ?></h3>
                                         </div>
-                                    @else
+                                    <?php else: ?>
                                         <div id="accordion" class="second-accordion">
-                                        @foreach($announsments->take(2) as $announsment)
+                                        <?php $__currentLoopData = $announsments->take(2); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $announsment): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                         <div class="card">
-                                            <div class="card-header" id="headingFour{{ $announsment->id }}">
+                                            <div class="card-header" id="headingFour<?php echo e($announsment->id); ?>">
                                                 <div class="mb-0">
-                                                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapseFour{{ $announsment->id }}" aria-expanded="true" aria-controls="collapseFour">
-                                                        <div class="learning-questions-img rgt-20">{{ str_limit($announsment->user->fname, $limit = 1, $end = '') }}{{ str_limit($announsment->user->lname, $limit = 1, $end = '') }}
+                                                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapseFour<?php echo e($announsment->id); ?>" aria-expanded="true" aria-controls="collapseFour">
+                                                        <div class="learning-questions-img rgt-20"><?php echo e(str_limit($announsment->user->fname, $limit = 1, $end = '')); ?><?php echo e(str_limit($announsment->user->lname, $limit = 1, $end = '')); ?>
+
                                                         </div>
                                                         <div class="row">
                                                             <div class="col-lg-6">
-                                                                <div class="section"><a href="#" title="questions">{{ $course->user->fname }} {{ $announsment->user->lname }}</a> <a href="#" title="questions">{{ date('jS F Y', strtotime($announsment->created_at)) }}</a></div>
+                                                                <div class="section"><a href="#" title="questions"><?php echo e($course->user->fname); ?> <?php echo e($announsment->user->lname); ?></a> <a href="#" title="questions"><?php echo e(date('jS F Y', strtotime($announsment->created_at))); ?></a></div>
                                                             </div>
                                                             <div class="col-lg-6">
                                                                 <div class="section-dividation text-right">
@@ -341,44 +345,44 @@
                                                         </div>
                                                         <div class="row">
                                                             <div class="col-lg-12 col-9"> 
-                                                                <div class="profile-heading">{{ __('Announcements') }}</div>
+                                                                <div class="profile-heading"><?php echo e(__('Announcements')); ?></div>
                                                             </div>
                                                             
                                                         </div>
                                                     </button>
                                                 </div>
                                             </div>
-                                            <div id="collapseFour{{ $announsment->id }}" class="collapse" aria-labelledby="headingFour" data-parent="#accordion">
+                                            <div id="collapseFour<?php echo e($announsment->id); ?>" class="collapse" aria-labelledby="headingFour" data-parent="#accordion">
                                                
                                                 <div class="card-body">
-                                                    <p class="announsment-text">{!! $announsment->announsment !!}</p>
+                                                    <p class="announsment-text"><?php echo $announsment->announsment; ?></p>
                                                 </div>
                                             </div>
                                         </div>
-                                        @endforeach
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                         </div>
-                                    @endif
-                                    <div class="learning-questions-heading"><a id="goTab5" href="" title="browse">{{ __('Browse announcements') }}</a>
+                                    <?php endif; ?>
+                                    <div class="learning-questions-heading"><a id="goTab5" href="" title="browse"><?php echo e(__('Browse announcements')); ?></a>
                                     </div>
                                 </div>
                             </div>
-                            @endif
+                            <?php endif; ?>
                         </div>
                         <div class="content-course-block">
-                            <h4 class="content-course">{{ __('About this course') }}</h4>
-                            <p class="btm-40">{{ $course->short_detail }}</p>
+                            <h4 class="content-course"><?php echo e(__('About this course')); ?></h4>
+                            <p class="btm-40"><?php echo e($course->short_detail); ?></p>
                         </div>
                         <hr>
                         <div class="content-course-number-block">
                             <div class="row">
                                 <div class="col-lg-3 col-sm-4">
-                                    <div class="content-course-number">{{ __('By the numbers') }}</div>
+                                    <div class="content-course-number"><?php echo e(__('By the numbers')); ?></div>
                                 </div>
                                 <div class="col-lg-6 col-sm-5">
                                     <div class="content-course-number">
                                         <ul>
-                                            <li>{{ __('students enrolled') }}: 
-                                                @php
+                                            <li><?php echo e(__('students enrolled')); ?>: 
+                                                <?php
                                                     $data = App\Order::where('course_id', $course->id)->count();
                                                     if($data>0){
 
@@ -388,21 +392,21 @@
 
                                                         echo "0";
                                                     }
-                                                @endphp
+                                                ?>
                                             </li>
-                                            @if($course->language_id == !NULL)
-                                            @if(isset($course->language))
-                                            <li>{{ __('Languages') }}: {{ $course->language->name }}</li>
-                                            @endif
-                                            @endif
+                                            <?php if($course->language_id == !NULL): ?>
+                                            <?php if(isset($course->language)): ?>
+                                            <li><?php echo e(__('Languages')); ?>: <?php echo e($course->language->name); ?></li>
+                                            <?php endif; ?>
+                                            <?php endif; ?>
                                         </ul>
                                     </div>
                                 </div>
                                 <div class="col-lg-3 col-sm-3">
                                     <div class="content-course-number">
                                         <ul>
-                                            <li>{{ __('Classes') }}:
-                                                @php
+                                            <li><?php echo e(__('Classes')); ?>:
+                                                <?php
                                                     $data = App\CourseClass::where('course_id', $course->id)->count();
                                                     if($data>0){
 
@@ -412,7 +416,7 @@
 
                                                         echo "0";
                                                     }
-                                                @endphp
+                                                ?>
                                             </li>
                                         </ul>
                                     </div>
@@ -421,59 +425,60 @@
                             <hr>
                             <div class="row">
                                 <div class="col-lg-3 col-md-3">
-                                    <div class="content-course-number">{{ __('Description') }}</div>
+                                    <div class="content-course-number"><?php echo e(__('Description')); ?></div>
                                 </div>
                                 <div class="col-lg-9 col-md-9">
                                     <div class="content-course-number content-course-one">
-                                        <h5 class="content-course-number-heading">{{ __('About this course') }}</h5>
-                                        <p>{{ $course->short_detail }}<p>
-                                        <h5 class="content-course-number-heading">{{ __('Description') }}</h5>
-                                        <p>{!! $course->detail !!}<p>
+                                        <h5 class="content-course-number-heading"><?php echo e(__('About this course')); ?></h5>
+                                        <p><?php echo e($course->short_detail); ?><p>
+                                        <h5 class="content-course-number-heading"><?php echo e(__('Description')); ?></h5>
+                                        <p><?php echo $course->detail; ?><p>
                                     </div>
                                 </div>
                             </div>
                             <hr>
                             <div class="row">
                                 <div class="col-lg-3 col-md-3">
-                                    <div class="content-course-number">{{ __('Instructor') }}</div>
+                                    <div class="content-course-number"><?php echo e(__('Instructor')); ?></div>
                                 </div>
                                 <div class="col-lg-9 col-md-9">
                                     <div class="content-course-number content-course-number-one">
                                         <div class="content-img-block btm-20">
                                             <div class="content-img">
-                                                @php
+                                                <?php
                                                 $fullname = optional($course->user)['fname'] . ' ' . optional($course->user)['lname'];
                                                 $fullname = preg_replace('/\s+/', '', $fullname);
-                                                @endphp
+                                                ?>
 
-                                                @if($course->user->user_img != null || $course->user->user_img !='')
-                                                  <a href="{{ route('instructor.profile', ['id' => $course->user->id, 'name' => $fullname] ) }}" title="profile"><img src="{{ asset('images/user_img/'.$course->user->user_img) }}" class="img-fluid"  alt="instructor" ></a>
-                                                @else
-                                                    <a href="{{ route('instructor.profile', ['id' => $course->user->id, 'name' => $fullname] ) }}" title="profile"><img src="{{ asset('images/default/user.jpg')}}" class="img-fluid" alt="instructor"></a>
-                                                @endif
+                                                <?php if($course->user->user_img != null || $course->user->user_img !=''): ?>
+                                                  <a href="<?php echo e(route('instructor.profile', ['id' => $course->user->id, 'name' => $fullname] )); ?>" title="profile"><img src="<?php echo e(asset('images/user_img/'.$course->user->user_img)); ?>" class="img-fluid"  alt="instructor" ></a>
+                                                <?php else: ?>
+                                                    <a href="<?php echo e(route('instructor.profile', ['id' => $course->user->id, 'name' => $fullname] )); ?>" title="profile"><img src="<?php echo e(asset('images/default/user.jpg')); ?>" class="img-fluid" alt="instructor"></a>
+                                                <?php endif; ?>
                                             </div>
                                             <div class="content-img-dtl">
-                                                <div class="profile"><a href="{{ route('instructor.profile', ['id' => $course->user->id, 'name' => $fullname] ) }}" title="profile">{{ $course->user->fname }} {{ $course->user->lname }}
+                                                <div class="profile"><a href="<?php echo e(route('instructor.profile', ['id' => $course->user->id, 'name' => $fullname] )); ?>" title="profile"><?php echo e($course->user->fname); ?> <?php echo e($course->user->lname); ?>
+
                                                 </a></div>
-                                                <p>{{ $course->user->email }}</p>
+                                                <p><?php echo e($course->user->email); ?></p>
                                             </div>
                                         </div>
                                         <ul>
-                                            @if($course->user->twitter_url != NULL)
-                                            <li class="rgt-10"><a href="{{ $course->user['twitter_url'] }}" target="_blank" title="twitter"><i class="fab fa-twitter"></i></a></li>
-                                            @endif
-                                            @if($course->user->fb_url != NULL)
-                                            <li class="rgt-10"><a href="{{ $course->user['fb_url'] }}" target="_blank" title="facebook"><i class="fa fa-facebook"></i></a></li>
-                                            @endif
-                                            @if($course->user->linkedin_url != NULL)
-                                            <li class="rgt-10"><a href="{{ $course->user['linkedin_url'] }}" target="_blank" title="linkedin"><i class="fa fa-linkedin"></i></a></li>
-                                            @endif
-                                            @if($course->user->youtube_url != NULL)
-                                            <li class="rgt-10"><a href="{{ $course->user['youtube_url'] }}" target="_blank" title="twitter"><i class="fa fa-youtube"></i></a></li>
-                                            @endif
+                                            <?php if($course->user->twitter_url != NULL): ?>
+                                            <li class="rgt-10"><a href="<?php echo e($course->user['twitter_url']); ?>" target="_blank" title="twitter"><i class="fab fa-twitter"></i></a></li>
+                                            <?php endif; ?>
+                                            <?php if($course->user->fb_url != NULL): ?>
+                                            <li class="rgt-10"><a href="<?php echo e($course->user['fb_url']); ?>" target="_blank" title="facebook"><i class="fa fa-facebook"></i></a></li>
+                                            <?php endif; ?>
+                                            <?php if($course->user->linkedin_url != NULL): ?>
+                                            <li class="rgt-10"><a href="<?php echo e($course->user['linkedin_url']); ?>" target="_blank" title="linkedin"><i class="fa fa-linkedin"></i></a></li>
+                                            <?php endif; ?>
+                                            <?php if($course->user->youtube_url != NULL): ?>
+                                            <li class="rgt-10"><a href="<?php echo e($course->user['youtube_url']); ?>" target="_blank" title="twitter"><i class="fa fa-youtube"></i></a></li>
+                                            <?php endif; ?>
 
                                         </ul>
-                                        <p>{!! $course->user->detail !!}<p>
+                                        <p><?php echo $course->user->detail; ?><p>
                                     </div>
                                 </div>
                             </div>
@@ -483,42 +488,43 @@
 
                 <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
                     <div class="profile-block">
-                        <form  method="post" action="{{ action('CourseProgressController@checked', $course->id) }}" data-parsley-validate class="form-horizontal form-label-left">
-                            {{ csrf_field() }}
+                        <form  method="post" action="<?php echo e(action('CourseProgressController@checked', $course->id)); ?>" data-parsley-validate class="form-horizontal form-label-left">
+                            <?php echo e(csrf_field()); ?>
+
                         
                             <div id="ck-button">
                                <label>
-                                  <input type="checkbox" name="select-all" class="hidden" id="select-all" /><span>{{ __('Select All')}}</span>
+                                  <input type="checkbox" name="select-all" class="hidden" id="select-all" /><span><?php echo e(__('Select All')); ?></span>
                                </label>
                             </div>
 
-                            @php
+                            <?php
                                 $today = Carbon\Carbon::now();
 
                            
-                            @endphp
+                            ?>
                        
                             <div id="accordion" class="second-accordion">
                                 <?php $i=0;?>
-                                @foreach($course->chapter as $coursechapter )
+                                <?php $__currentLoopData = $course->chapter; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $coursechapter): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <?php $i++;?>
-                                @php
+                                <?php
 
                                 
-                                @endphp
-                                @if(Auth::user()->role == "user" && $course->drip_enable == 1 && $coursechapter->drip_type != NULL)
+                                ?>
+                                <?php if(Auth::user()->role == "user" && $course->drip_enable == 1 && $coursechapter->drip_type != NULL): ?>
 
-                                    @if($coursechapter->drip_type == 'date' && $coursechapter->drip_date != NULL)
+                                    <?php if($coursechapter->drip_type == 'date' && $coursechapter->drip_date != NULL): ?>
 
-                                        @if($today >= $coursechapter->drip_date)
+                                        <?php if($today >= $coursechapter->drip_date): ?>
 
-                                            @include('include.course_chapter')
+                                            <?php echo $__env->make('include.course_chapter', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
 
-                                        @endif
+                                        <?php endif; ?>
 
-                                    @elseif($coursechapter->drip_type == 'days' && $coursechapter->drip_days != NULL)
+                                    <?php elseif($coursechapter->drip_type == 'days' && $coursechapter->drip_days != NULL): ?>
 
-                                        @php
+                                        <?php
                                             $order = App\Order::where('status', '1')->where('user_id', Auth::User()->id)->where('course_id', $course->id)->first();
                                             $days = $coursechapter->drip_days;
                                             $orderDate = optional($order)['created_at'];
@@ -549,28 +555,29 @@
                                             }
 
                                             
-                                        @endphp
+                                        ?>
 
-                                        @if($today >= $startDate)
+                                        <?php if($today >= $startDate): ?>
 
-                                            @include('include.course_chapter')
+                                            <?php echo $__env->make('include.course_chapter', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
 
-                                        @endif
+                                        <?php endif; ?>
 
-                                    @endif
-                                @else
+                                    <?php endif; ?>
+                                <?php else: ?>
 
-                                    @include('include.course_chapter')
+                                    <?php echo $__env->make('include.course_chapter', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
 
-                                @endif
+                                <?php endif; ?>
                                 
-                                @endforeach
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </div>
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="mark-read-button">
                                         <button type="submit" class="btn btn-md btn-primary">
-                                            {{ __('Mark as Complete') }}
+                                            <?php echo e(__('Mark as Complete')); ?>
+
                                         </button>
                                     </div>
                                 </div>
@@ -585,9 +592,9 @@
 
                     <div id="about-product" class="about-product-main-block">
 
-                        @auth
+                        <?php if(auth()->guard()->check()): ?>
 
-                        @php
+                        <?php
                             $user_enrolled = App\Order::where('course_id', $course->id)->where('user_id', Auth::user()->id)->first();
 
                             $bundle = App\Order::where('user_id', Auth::User()->id)->where('bundle_id', '!=', NULL)->get();
@@ -602,48 +609,50 @@
 
                             $course_id = array_values(array_filter($course_id));
                             $course_id = array_flatten($course_id);
-                        @endphp
+                        ?>
 
 
-                        @if( $user_enrolled != NULL || Auth::user()->role == 'admin' || isset($course_id) || in_array($course->id, $course_id))
+                        <?php if( $user_enrolled != NULL || Auth::user()->role == 'admin' || isset($course_id) || in_array($course->id, $course_id)): ?>
 
-                        @if( ! $bigblue->isEmpty() )
+                        <?php if( ! $bigblue->isEmpty() ): ?>
 
                         <div class="btm-30">
-                            <h5>{{ __('Big Blue Meetings') }}</h5>
+                            <h5><?php echo e(__('Big Blue Meetings')); ?></h5>
                             <div class="faq-block">
                                 <div class="faq-dtl">
                                     <div id="accordion" class="second-accordion">
 
-                                    @foreach($bigblue as $bbl)
-                                    @if($bbl->is_ended != 1)
+                                    <?php $__currentLoopData = $bigblue; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $bbl): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <?php if($bbl->is_ended != 1): ?>
 
                                     <div class="card btm-10">
-                                        <div class="card-header" id="headingThree{{ $bbl->id }}">
+                                        <div class="card-header" id="headingThree<?php echo e($bbl->id); ?>">
                                             <div class="mb-0">
-                                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapseThree{{ $bbl->id }}" aria-expanded="false" aria-controls="collapseThree">
+                                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapseThree<?php echo e($bbl->id); ?>" aria-expanded="false" aria-controls="collapseThree">
 
-                                                    {{ $bbl['meetingname'] }}
+                                                    <?php echo e($bbl['meetingname']); ?>
+
 
                                                 </button>
                                             </div>
 
                                         </div>
-                                        <div id="collapseThree{{ $bbl->id }}" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+                                        <div id="collapseThree<?php echo e($bbl->id); ?>" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
 
                                         <div class="card-body">
                                             <table class="table">
                                             <tbody>
                                                 <td>
                                                   <ul>
-                                                    <li><a href="#" title="about">{{ __('Created') }}: @if(isset($bbl->user)) {{ $bbl->user['fname'] }} {{ $bbl->user['lname'] }} @endif</a></li>
-                                                    <li><a href="#" title="about">{{ __('Start At') }}: {{ date('d-m-Y | h:i:s A',strtotime($bbl['start_time'])) }}</a></li>
+                                                    <li><a href="#" title="about"><?php echo e(__('Created')); ?>: <?php if(isset($bbl->user)): ?> <?php echo e($bbl->user['fname']); ?> <?php echo e($bbl->user['lname']); ?> <?php endif; ?></a></li>
+                                                    <li><a href="#" title="about"><?php echo e(__('Start At')); ?>: <?php echo e(date('d-m-Y | h:i:s A',strtotime($bbl['start_time']))); ?></a></li>
                                                     <li class="comment more">
-                                                       {!! $bbl->detail !!}
+                                                       <?php echo $bbl->detail; ?>
+
                                                     </li>
 
                                                     <li>
-                                                        <a href="" data-toggle="modal" data-target="#myModalBBL" title="join" class="btn btn-light" title="course">{{ __('Join Meeting') }}</a>
+                                                        <a href="" data-toggle="modal" data-target="#myModalBBL" title="join" class="btn btn-light" title="course"><?php echo e(__('Join Meeting')); ?></a>
                                                     </li>
 
                                                     <div class="modal fade" id="myModalBBL" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -651,33 +660,34 @@
                                                           <div class="modal-content">
                                                             <div class="modal-header">
 
-                                                              <h4 class="modal-title" id="myModalLabel">{{ __('Join Meeting') }}</h4>
+                                                              <h4 class="modal-title" id="myModalLabel"><?php echo e(__('Join Meeting')); ?></h4>
                                                               <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                                             </div>
                                                             <div class="box box-primary">
                                                               <div class="panel panel-sum">
                                                                 <div class="modal-body">
 
-                                                                    <form action="{{ route('bbl.api.join') }}" method="POST">
-                                                                        @csrf
+                                                                    <form action="<?php echo e(route('bbl.api.join')); ?>" method="POST">
+                                                                        <?php echo csrf_field(); ?>
 
                                                                         <div class="form-group">
-                                                                            <label>{{ __('Meeting ID')}}:</label>
-                                                                            <input readonly="" type="text" name="meetingid" value="{{ $bbl['meetingid'] }}" class="form-control">
+                                                                            <label><?php echo e(__('Meeting ID')); ?>:</label>
+                                                                            <input readonly="" type="text" name="meetingid" value="<?php echo e($bbl['meetingid']); ?>" class="form-control">
                                                                         </div>
 
                                                                         <div class="form-group">
-                                                                            <label>{{ __('Your Name')}}:</label>
-                                                                            <input value="{{ old('name') }}" type="text" required="" name="name" placeholder="{{ __('Enter your name')}}" class="form-control">
+                                                                            <label><?php echo e(__('Your Name')); ?>:</label>
+                                                                            <input value="<?php echo e(old('name')); ?>" type="text" required="" name="name" placeholder="<?php echo e(__('Enter your name')); ?>" class="form-control">
                                                                         </div>
 
                                                                         <div class="form-group">
-                                                                            <label>{{ __('Meeting Password')}}:</label>
-                                                                            <input type="password" name="password" placeholder="{{ __('Enter meeting password')}}" class="form-control" required="">
+                                                                            <label><?php echo e(__('Meeting Password')); ?>:</label>
+                                                                            <input type="password" name="password" placeholder="<?php echo e(__('Enter meeting password')); ?>" class="form-control" required="">
                                                                         </div>
 
                                                                         <button type="submit" class="btn btn-sm btn-primary">
-                                                                            {{ __('Join Meeting') }}
+                                                                            <?php echo e(__('Join Meeting')); ?>
+
                                                                         </button>
 
                                                                     </form>
@@ -697,34 +707,35 @@
                                        </div>
                                     </div>
 
-                                    @endif
-                                    @endforeach
+                                    <?php endif; ?>
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 
                                 </div>
                             </div>
                         </div>
-                        @endif
+                        <?php endif; ?>
 
-                        @if( ! $meetings->isEmpty() )
+                        <?php if( ! $meetings->isEmpty() ): ?>
                         <div class="btm-30">
-                            <h5>{{ __('Zoom Meetings') }}</h5>
+                            <h5><?php echo e(__('Zoom Meetings')); ?></h5>
                             <div class="faq-block">
                                 <div class="faq-dtl">
                                     <div id="accordion" class="second-accordion">
 
 
-                                    @foreach($meetings as $meeting)
+                                    <?php $__currentLoopData = $meetings; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $meeting): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 
                                     <div class="card btm-10">
-                                        <div class="card-header" id="headingFour{{ $meeting->id }}">
+                                        <div class="card-header" id="headingFour<?php echo e($meeting->id); ?>">
                                             <div class="mb-0">
-                                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapseFour{{ $meeting->id }}" aria-expanded="false" aria-controls="collapseFour">
-                                                    {{ $meeting['meeting_title'] }}
+                                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapseFour<?php echo e($meeting->id); ?>" aria-expanded="false" aria-controls="collapseFour">
+                                                    <?php echo e($meeting['meeting_title']); ?>
+
                                                 </button>
                                             </div>
 
                                         </div>
-                                        <div id="collapseFour{{ $meeting->id }}" class="collapse" aria-labelledby="headingFour" data-parent="#accordion">
+                                        <div id="collapseFour<?php echo e($meeting->id); ?>" class="collapse" aria-labelledby="headingFour" data-parent="#accordion">
 
                                         <div class="card-body">
                                             <table class="table">
@@ -732,16 +743,16 @@
                                                 <td>
                                                     <ul>
                                                         <li>
-                                                            <a href="#" title="about">{{ __('Created') }}: @if(isset($meeting->user)) {{ $meeting->user['fname'] }} {{ $meeting->user['lname'] }} @endif </a>
+                                                            <a href="#" title="about"><?php echo e(__('Created')); ?>: <?php if(isset($meeting->user)): ?> <?php echo e($meeting->user['fname']); ?> <?php echo e($meeting->user['lname']); ?> <?php endif; ?> </a>
                                                         </li>
                                                         <li>
-                                                           <p>{{ __('Meeting Owner')}}: {{ $meeting->owner_id }}</p>
+                                                           <p><?php echo e(__('Meeting Owner')); ?>: <?php echo e($meeting->owner_id); ?></p>
                                                         </li>
                                                         <li>
-                                                           <p class="btm-10"><a herf="#">{{ __('Start At') }}: {{ date('d-m-Y | h:i:s A',strtotime($meeting['start_time'])) }}</a></p>
+                                                           <p class="btm-10"><a herf="#"><?php echo e(__('Start At')); ?>: <?php echo e(date('d-m-Y | h:i:s A',strtotime($meeting['start_time']))); ?></a></p>
                                                         </li>
                                                         <li>
-                                                             <a href="{{ $meeting->zoom_url }}" target="_blank" class="iframe cboxElement btn btn-light">{{ __('Join Meeting') }}</a>
+                                                             <a href="<?php echo e($meeting->zoom_url); ?>" target="_blank" class="iframe cboxElement btn btn-light"><?php echo e(__('Join Meeting')); ?></a>
                                                         </li>
                                                     </ul>
 
@@ -751,36 +762,37 @@
                                         </div>
                                        </div>
                                     </div>
-                                    @endforeach
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        @endif
+                        <?php endif; ?>
                         
-                        @if($gsetting->googlemeet_enable == '1')
-                        @if( ! $googlemeetmeetings->isEmpty() )
+                        <?php if($gsetting->googlemeet_enable == '1'): ?>
+                        <?php if( ! $googlemeetmeetings->isEmpty() ): ?>
 
                         <div class="btm-30">
-                            <h5> {{ __('Google Meetings')}}</h5>
+                            <h5> <?php echo e(__('Google Meetings')); ?></h5>
                             <div class="faq-block">
                                 <div class="faq-dtl">
                                     <div id="accordion" class="second-accordion">
-                                    @foreach($googlemeetmeetings as $meeting)
+                                    <?php $__currentLoopData = $googlemeetmeetings; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $meeting): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 
                                     <div class="card btm-10">
-                                        <div class="card-header" id="headingFour{{ $meeting->id }}">
+                                        <div class="card-header" id="headingFour<?php echo e($meeting->id); ?>">
                                             <div class="mb-0">
-                                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapseFour{{ $meeting->id }}" aria-expanded="false" aria-controls="collapseFour">
+                                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapseFour<?php echo e($meeting->id); ?>" aria-expanded="false" aria-controls="collapseFour">
 
-                                                    {{ $meeting['meeting_title'] }}
+                                                    <?php echo e($meeting['meeting_title']); ?>
+
 
                                                 </button>
                                             </div>
 
                                         </div>
-                                        <div id="collapseFour{{ $meeting->id }}" class="collapse" aria-labelledby="headingFour" data-parent="#accordion">
+                                        <div id="collapseFour<?php echo e($meeting->id); ?>" class="collapse" aria-labelledby="headingFour" data-parent="#accordion">
 
                                         <div class="card-body">
                                             <table class="table">
@@ -788,17 +800,17 @@
                                                 <td>
                                                     <ul>
                                                         <li>
-                                                            <a href="#" title="about">{{ __('Created') }}: @if(isset($meeting->user)) {{ $meeting->user['fname'] }} {{ $meeting->user['lname'] }} @endif </a>
+                                                            <a href="#" title="about"><?php echo e(__('Created')); ?>: <?php if(isset($meeting->user)): ?> <?php echo e($meeting->user['fname']); ?> <?php echo e($meeting->user['lname']); ?> <?php endif; ?> </a>
 
                                                         </li>
                                                         <li>
-                                                           <p>Meeting Owner: {{ $meeting->owner_id }}</p>
+                                                           <p>Meeting Owner: <?php echo e($meeting->owner_id); ?></p>
                                                         </li>
                                                         <li>
-                                                           <p class="btm-10"><a herf="#">{{ __('Start At') }}: {{ date('d-m-Y | h:i:s A',strtotime($meeting['start_time'])) }}</a></p>
+                                                           <p class="btm-10"><a herf="#"><?php echo e(__('Start At')); ?>: <?php echo e(date('d-m-Y | h:i:s A',strtotime($meeting['start_time']))); ?></a></p>
                                                         </li>
                                                         <li>
-                                                             <a href="{{ $meeting->meet_url }}" target="_blank" class="btn btn-light">{{ __('Join Meeting') }}</a>
+                                                             <a href="<?php echo e($meeting->meet_url); ?>" target="_blank" class="btn btn-light"><?php echo e(__('Join Meeting')); ?></a>
                                                         </li>
                                                     </ul>
 
@@ -808,38 +820,39 @@
                                         </div>
                                        </div>
                                     </div>
-                                    @endforeach
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        @endif
-                        @endif
+                        <?php endif; ?>
+                        <?php endif; ?>
                        
-                        @if($gsetting->jitsimeet_enable == '1')
-                        @if( ! $jitsimeetings->isEmpty() )
+                        <?php if($gsetting->jitsimeet_enable == '1'): ?>
+                        <?php if( ! $jitsimeetings->isEmpty() ): ?>
                         <div class="btm-30">
-                            <h5> {{ __('Jitsi Meetings')}}</h5>
+                            <h5> <?php echo e(__('Jitsi Meetings')); ?></h5>
                             <div class="faq-block">
                                 <div class="faq-dtl">
                                     <div id="accordion" class="second-accordion">
 
 
-                                    @foreach($jitsimeetings as $meeting)
+                                    <?php $__currentLoopData = $jitsimeetings; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $meeting): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 
                                     <div class="card btm-10">
-                                        <div class="card-header" id="headingFour{{ $meeting->id }}">
+                                        <div class="card-header" id="headingFour<?php echo e($meeting->id); ?>">
                                             <div class="mb-0">
-                                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapseFour{{ $meeting->id }}" aria-expanded="false" aria-controls="collapseFour">
+                                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapseFour<?php echo e($meeting->id); ?>" aria-expanded="false" aria-controls="collapseFour">
 
-                                                    {{ $meeting['meeting_title'] }}
+                                                    <?php echo e($meeting['meeting_title']); ?>
+
 
                                                 </button>
                                             </div>
 
                                         </div>
-                                        <div id="collapseFour{{ $meeting->id }}" class="collapse" aria-labelledby="headingFour" data-parent="#accordion">
+                                        <div id="collapseFour<?php echo e($meeting->id); ?>" class="collapse" aria-labelledby="headingFour" data-parent="#accordion">
 
                                         <div class="card-body">
                                             <table class="table">
@@ -847,17 +860,17 @@
                                                 <td>
                                                     <ul>
                                                         <li>
-                                                            <a href="#" title="about">{{ __('Created') }}: @if(isset($meeting->user)) {{ $meeting->user['fname'] }} {{ $meeting->user['lname'] }} @endif </a>
+                                                            <a href="#" title="about"><?php echo e(__('Created')); ?>: <?php if(isset($meeting->user)): ?> <?php echo e($meeting->user['fname']); ?> <?php echo e($meeting->user['lname']); ?> <?php endif; ?> </a>
 
                                                         </li>
                                                         <li>
-                                                           <p>{{ __('Meeting Owner')}}: {{ $meeting->owner_id }}</p>
+                                                           <p><?php echo e(__('Meeting Owner')); ?>: <?php echo e($meeting->owner_id); ?></p>
                                                         </li>
                                                         <li>
-                                                           <p class="btm-10"><a herf="#">{{ __('Start At') }}: {{ date('d-m-Y | h:i:s A',strtotime($meeting['start_time'])) }}</a></p>
+                                                           <p class="btm-10"><a herf="#"><?php echo e(__('Start At')); ?>: <?php echo e(date('d-m-Y | h:i:s A',strtotime($meeting['start_time']))); ?></a></p>
                                                         </li>
                                                         <li>
-                                                             <a href="{{url('meetup-conferencing/'.$meeting->meeting_id) }}" target="_blank" class="btn btn-light">{{ __('Join Meeting') }}</a>
+                                                             <a href="<?php echo e(url('meetup-conferencing/'.$meeting->meeting_id)); ?>" target="_blank" class="btn btn-light"><?php echo e(__('Join Meeting')); ?></a>
                                                         </li>
                                                     </ul>
 
@@ -867,19 +880,19 @@
                                         </div>
                                        </div>
                                     </div>
-                                    @endforeach
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        @endif
-                        @endif
+                        <?php endif; ?>
+                        <?php endif; ?>
                      
 
-                        @endif
+                        <?php endif; ?>
 
-                        @endauth
+                        <?php endif; ?>
                    
                     </div>
                         
@@ -892,11 +905,11 @@
                             <div class="col-lg-12">
                                 <div class="contact-search-block btm-40">
                                     <div class="learning-contact-search">
-                                        @if($coursequestions->isEmpty())
-                                            <h4 class="question-text">{{ __('No') }} {{ __('Recent Questions') }}</h4>
-                                        @else
+                                        <?php if($coursequestions->isEmpty()): ?>
+                                            <h4 class="question-text"><?php echo e(__('No')); ?> <?php echo e(__('Recent Questions')); ?></h4>
+                                        <?php else: ?>
                                             <h4 class="question-text">
-                                            @php
+                                            <?php
                                                 $quess = App\Question::where('course_id', $course->id)->count();
                                                 if($quess>0){
 
@@ -906,13 +919,14 @@
 
                                                     echo "0";
                                                 }
-                                            @endphp
-                                            {{ __('questions in this course') }}</h4>
-                                        @endif
+                                            ?>
+                                            <?php echo e(__('questions in this course')); ?></h4>
+                                        <?php endif; ?>
                                         
                                     </div>
                                     <div class="learning-contact-btn">
-                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">{{ __('Ask a new question') }}
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal"><?php echo e(__('Ask a new question')); ?>
+
                                         </button>
 
                                         <!--Model start-->
@@ -923,42 +937,43 @@
                                             <!-- Modal content-->
                                             <div class="modal-content">
                                               <div class="modal-header">
-                                                <h4 class="modal-title">{{ __('Ask a new question') }}</h4>
+                                                <h4 class="modal-title"><?php echo e(__('Ask a new question')); ?></h4>
                                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                                               </div>
 
                                               <div class="modal-body">
                                                 
-                                                <form id="demo-form2" method="post" action="{{ url('addquestion', $course->id) }}"
+                                                <form id="demo-form2" method="post" action="<?php echo e(url('addquestion', $course->id)); ?>"
                                                     data-parsley-validate class="form-horizontal form-label-left">
-                                                    {{ csrf_field() }}
+                                                    <?php echo e(csrf_field()); ?>
+
                                                             
                                                     <div class="row">
                                                       <div class="col-md-6">
-                                                        <input type="hidden" name="instructor_id" class="form-control" value="{{$course->user_id}}"  />
-                                                        <input type="hidden" name="user_id"  value="{{Auth::user()->id}}" />
+                                                        <input type="hidden" name="instructor_id" class="form-control" value="<?php echo e($course->user_id); ?>"  />
+                                                        <input type="hidden" name="user_id"  value="<?php echo e(Auth::user()->id); ?>" />
                                                       </div>
                                                       <div class="col-md-6">
-                                                        <input type="hidden" name="course_id"  value="{{$course->id}}" />
+                                                        <input type="hidden" name="course_id"  value="<?php echo e($course->id); ?>" />
                                                         <input type="hidden" name="status"  value="1" />
                                                       </div>
                                                     </div>
                                                     <br>
                                                     <div class="row">
                                                       <div class="col-md-12">
-                                                        <label for="detail">{{ __('Question') }}:<sup class="redstar">*</sup></label>
+                                                        <label for="detail"><?php echo e(__('Question')); ?>:<sup class="redstar">*</sup></label>
                                                         <textarea name="question" id="detail" rows="4"  class="form-control" placeholder=""></textarea>
                                                       </div>
                                                     </div>
                                                     <br>
                                                     <div class="box-footer">
-                                                     <button type="submit" class="btn btn-lg col-md-3 btn-primary">{{ __('Submit') }}</button>
+                                                     <button type="submit" class="btn btn-lg col-md-3 btn-primary"><?php echo e(__('Submit')); ?></button>
                                                     </div>
                                                 </form>
                                             </div>
 
                                               <div class="modal-footer">
-                                                <button type="button" class="btn btn-default" data-dismiss="modal">{{ __('Close') }}</button>
+                                                <button type="button" class="btn btn-default" data-dismiss="modal"><?php echo e(__('Close')); ?></button>
                                               </div>
                                             </div>
 
@@ -969,31 +984,33 @@
                                 </div>
                                 
                                 <div id="accordion" class="second-accordion">
-                                    @php
+                                    <?php
                                         $questions = App\Question::where('course_id', $course->id)->get();
-                                    @endphp
-                                    @foreach($questions as $ques)
-                                    @if($ques->status == 1)
+                                    ?>
+                                    <?php $__currentLoopData = $questions; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $ques): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <?php if($ques->status == 1): ?>
                                     <div class="card btm-10">
-                                        <div class="card-header" id="headingThree{{ $ques->id }}">
+                                        <div class="card-header" id="headingThree<?php echo e($ques->id); ?>">
                                             <div class="mb-0">
-                                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapseThree{{ $ques->id }}" aria-expanded="true" aria-controls="collapseThree">
-                                                    <div class="learning-questions-img rgt-10">{{ str_limit($ques->user->fname, $limit = 1, $end = '') }}{{ str_limit($ques->user->lname, $limit = 1, $end = '') }}
+                                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapseThree<?php echo e($ques->id); ?>" aria-expanded="true" aria-controls="collapseThree">
+                                                    <div class="learning-questions-img rgt-10"><?php echo e(str_limit($ques->user->fname, $limit = 1, $end = '')); ?><?php echo e(str_limit($ques->user->lname, $limit = 1, $end = '')); ?>
+
                                                     </div>
                                                     <div class="row no-gutters">
                                                         <div class="col-lg-6 col-8">
                                                             <div class="section">
-                                                                <a href="#" title="questions">{{ $ques->user->fname }} </a> 
-                                                                <a href="#" title="questions">{{ date('jS F Y', strtotime($ques->created_at)) }}</a>
+                                                                <a href="#" title="questions"><?php echo e($ques->user->fname); ?> </a> 
+                                                                <a href="#" title="questions"><?php echo e(date('jS F Y', strtotime($ques->created_at))); ?></a>
                                                                 <div class="author-tag">
-                                                                    {{ $ques->user->role }}
+                                                                    <?php echo e($ques->user->role); ?>
+
                                                                 </div>
                                                             </div>
                                                         </div>
                                                        
                                                         <div class="col-lg-5 col-3">
                                                             <div class="section-dividation text-right">
-                                                                @php
+                                                                <?php
                                                                     $answer = App\Answer::where('question_id', $ques->id)->count();
                                                                     if($answer>0){
 
@@ -1003,13 +1020,14 @@
 
                                                                         echo "0";
                                                                     }
-                                                                @endphp
-                                                                {{ __('Answer') }}
+                                                                ?>
+                                                                <?php echo e(__('Answer')); ?>
+
                                                             </div>
                                                         </div>
                                                         <div class="col-lg-1 col-1">
                                                             <div class="question-report txt-rgt">
-                                                                 <a href="#" data-toggle="modal" data-target="#myModalquesReport{{ $ques->id }}" title="response"><i class="fa fa-flag" aria-hidden="true"></i></a>
+                                                                 <a href="#" data-toggle="modal" data-target="#myModalquesReport<?php echo e($ques->id); ?>" title="response"><i class="fa fa-flag" aria-hidden="true"></i></a>
                                                             </div>
                                                             
                                                         </div>
@@ -1017,11 +1035,12 @@
                                                     </div>
                                                     <div class="row no-gutters">
                                                         <div class="col-lg-8 col-8"> 
-                                                            <div class="profile-heading profile-heading-two">{!! $ques->question !!}
+                                                            <div class="profile-heading profile-heading-two"><?php echo $ques->question; ?>
+
                                                             </div>
                                                         </div>
                                                         <div class="col-lg-3 col-3"> 
-                                                            <div class="profile-heading txt-rgt"><a href="#" data-toggle="modal" data-target="#myModalanswer{{ $ques->id }}" title="response">{{ __('Add Answer') }}</a>
+                                                            <div class="profile-heading txt-rgt"><a href="#" data-toggle="modal" data-target="#myModalanswer<?php echo e($ques->id); ?>" title="response"><?php echo e(__('Add Answer')); ?></a>
                                                             </div>
                                                         </div>
                                                         
@@ -1031,44 +1050,46 @@
                                             </div>
                                         </div>
                                         <!--Model start-->
-                                        <div class="modal fade" id="myModalanswer{{ $ques->id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                        <div class="modal fade" id="myModalanswer<?php echo e($ques->id); ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                                             <div class="modal-dialog modal-lg" role="document">
                                               <div class="modal-content">
                                                 <div class="modal-header">
 
-                                                  <h4 class="modal-title" id="myModalLabel">{{ __('Answer') }}</h4>
+                                                  <h4 class="modal-title" id="myModalLabel"><?php echo e(__('Answer')); ?></h4>
                                                   <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                                 </div>
                                                 <div class="box box-primary">
                                                   <div class="panel panel-sum">
                                                     <div class="modal-body">
                                                     
-                                                    <form id="demo-form2" method="post" action="{{ url('addanswer', $ques->id) }}"
+                                                    <form id="demo-form2" method="post" action="<?php echo e(url('addanswer', $ques->id)); ?>"
                                                         data-parsley-validate class="form-horizontal form-label-left">
-                                                            {{ csrf_field() }}
+                                                            <?php echo e(csrf_field()); ?>
 
-                                                        <input type="hidden" name="question_id"  value="{{$ques->id}}" />
-                                                        <input type="hidden" name="instructor_id"  value="{{$course->user_id}}" />
-                                                        <input type="hidden" name="ans_user_id"  value="{{Auth::user()->id}}" />
-                                                        <input type="hidden" name="ques_user_id"  value="{{$ques->user_id}}" />
-                                                        <input type="hidden" name="course_id"  value="{{$ques->course_id}}" />
-                                                        <input type="hidden" name="question_id"  value="{{$ques->id}}" />
+
+                                                        <input type="hidden" name="question_id"  value="<?php echo e($ques->id); ?>" />
+                                                        <input type="hidden" name="instructor_id"  value="<?php echo e($course->user_id); ?>" />
+                                                        <input type="hidden" name="ans_user_id"  value="<?php echo e(Auth::user()->id); ?>" />
+                                                        <input type="hidden" name="ques_user_id"  value="<?php echo e($ques->user_id); ?>" />
+                                                        <input type="hidden" name="course_id"  value="<?php echo e($ques->course_id); ?>" />
+                                                        <input type="hidden" name="question_id"  value="<?php echo e($ques->id); ?>" />
                                                         <input type="hidden" name="status"  value="1" />       
                                                         
                                                         <div class="row">
                                                           <div class="col-md-12">
-                                                            {!! $ques->question !!}
+                                                            <?php echo $ques->question; ?>
+
                                                             <br>
                                                             <br>
                                                           </div>
                                                           <div class="col-md-12">
-                                                            <label for="detail">{{ __('Answer') }}:<sup class="redstar">*</sup></label>
+                                                            <label for="detail"><?php echo e(__('Answer')); ?>:<sup class="redstar">*</sup></label>
                                                             <textarea name="answer" rows="4" id="detail2" class="form-control" placeholder=""></textarea>
                                                           </div>
                                                         </div>
                                                         <br>
                                                         <div class="box-footer">
-                                                         <button type="submit" class="btn btn-lg col-md-3 btn-primary">{{ __('Submit') }}</button>
+                                                         <button type="submit" class="btn btn-lg col-md-3 btn-primary"><?php echo e(__('Submit')); ?></button>
                                                         </div>
                                                     </form>
 
@@ -1082,51 +1103,52 @@
 
                                         <!--Model start Question Report-->
                                                            
-                                        <div class="modal fade" id="myModalquesReport{{ $ques->id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                        <div class="modal fade" id="myModalquesReport<?php echo e($ques->id); ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                                             <div class="modal-dialog modal-lg" role="document">
                                               <div class="modal-content">
                                                 <div class="modal-header">
 
-                                                  <h4 class="modal-title" id="myModalLabel">{{ __('Report') }} Question</h4>
+                                                  <h4 class="modal-title" id="myModalLabel"><?php echo e(__('Report')); ?> Question</h4>
                                                   <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                                 </div>
                                                 <div class="box box-primary">
                                                   <div class="panel panel-sum">
                                                     <div class="modal-body">
                                                     
-                                                    <form id="demo-form2" method="post" action="{{ route('question.report', $ques->id) }}"
+                                                    <form id="demo-form2" method="post" action="<?php echo e(route('question.report', $ques->id)); ?>"
                                                         data-parsley-validate class="form-horizontal form-label-left">
-                                                            {{ csrf_field() }}
+                                                            <?php echo e(csrf_field()); ?>
 
-                                                        <input type="hidden" name="course_id"  value="{{ $course->id }}" />
 
-                                                        <input type="hidden" name="question_id"  value="{{ $ques->id }}" />
+                                                        <input type="hidden" name="course_id"  value="<?php echo e($course->id); ?>" />
+
+                                                        <input type="hidden" name="question_id"  value="<?php echo e($ques->id); ?>" />
                                                                 
                                                         <div class="row">
                                                           <div class="col-md-6">
                                                             <div class="form-group">
-                                                                <label for="title">{{ __('Title') }}:<sup class="redstar">*</sup></label>
+                                                                <label for="title"><?php echo e(__('Title')); ?>:<sup class="redstar">*</sup></label>
                                                                 <input type="text" class="form-control" name="title" id="title" placeholder="Please Enter Title" value="" required>
                                                             </div>
                                                           </div>
                                                           <div class="col-md-6">
                                                             <div class="form-group">
-                                                                <label for="email">{{ __('Email') }}:<sup class="redstar">*</sup></label>
-                                                                <input type="email" class="form-control" name="email" id="title" placeholder="Please Enter Email" value="{{ Auth::user()->email }}" required>
+                                                                <label for="email"><?php echo e(__('Email')); ?>:<sup class="redstar">*</sup></label>
+                                                                <input type="email" class="form-control" name="email" id="title" placeholder="Please Enter Email" value="<?php echo e(Auth::user()->email); ?>" required>
                                                             </div>
                                                           </div>
                                                         </div>
                                                         <div class="row">
                                                           <div class="col-md-12">
                                                             <div class="form-group">
-                                                                <label for="detail">{{ __('Detail') }}:<sup class="redstar">*</sup></label>
+                                                                <label for="detail"><?php echo e(__('Detail')); ?>:<sup class="redstar">*</sup></label>
                                                                 <textarea name="detail" rows="4" id="detail3" class="form-control" placeholder="Enter Detail"></textarea>
                                                             </div>
                                                           </div>
                                                         </div>
                                                         <br>
                                                         <div class="box-footer">
-                                                            <button type="submit" class="btn btn-lg col-md-3 btn-primary">{{ __('Submit') }}</button>
+                                                            <button type="submit" class="btn btn-lg col-md-3 btn-primary"><?php echo e(__('Submit')); ?></button>
                                                         </div>
                                                     </form>
                                                     </div>
@@ -1139,43 +1161,45 @@
                                         <!--Model close -->
 
                                         
-                                        <div id="collapseThree{{ $ques->id }}" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
-                                            @php
+                                        <div id="collapseThree<?php echo e($ques->id); ?>" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+                                            <?php
                                                 $answers = App\Answer::where('question_id', $ques->id)->with('user')->get();
-                                            @endphp
-                                            @foreach($answers as $ans)
-                                            @if($ans->status == 1)
+                                            ?>
+                                            <?php $__currentLoopData = $answers; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $ans): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                            <?php if($ans->status == 1): ?>
                                             <div class="card-body">
                                                 <div class="answer-block">
                                                     <div class="row no-gutters">
                                                         <div class="col-lg-1 col-2">
-                                                            <div class="learning-questions-img-two">{{ str_limit($ans->user->fname, $limit = 1, $end = '') }}{{ str_limit($ans->user->lname, $limit = 1, $end = '') }}
+                                                            <div class="learning-questions-img-two"><?php echo e(str_limit($ans->user->fname, $limit = 1, $end = '')); ?><?php echo e(str_limit($ans->user->lname, $limit = 1, $end = '')); ?>
+
                                                             </div>
                                                         </div>
                                                         <div class="col-lg-11 col-10">
                                                             
                                                             <div class="section">
-                                                                <a href="#" title="questions">{{ $ans->user->fname }}</a> <a href="#" title="questions">{{ date('jS F Y', strtotime($ans->created_at)) }}</a>
+                                                                <a href="#" title="questions"><?php echo e($ans->user->fname); ?></a> <a href="#" title="questions"><?php echo e(date('jS F Y', strtotime($ans->created_at))); ?></a>
                                                                 <div class="author-tag">
-                                                                    {{ $ans->user->role }}
+                                                                    <?php echo e($ans->user->role); ?>
+
                                                                 </div>
                                                             </div>
                                                             <br>
 
                                                             <div class="section-answer">
-                                                                <a href="#" title="Course">{!! $ans->answer !!}</a>
+                                                                <a href="#" title="Course"><?php echo $ans->answer; ?></a>
                                                             </div>
 
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                            @endif
-                                            @endforeach
+                                            <?php endif; ?>
+                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                         </div>
                                     </div>
-                                    @endif
-                                    @endforeach
+                                    <?php endif; ?>
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 </div>
                             </div>
                         </div>
@@ -1183,29 +1207,30 @@
                 </div>
 
                 <div class="tab-pane fade" id="nav-announcement" role="tabpanel" aria-labelledby="nav-announcement-tab">
-                    @if($announsments->isEmpty())
+                    <?php if($announsments->isEmpty()): ?>
                         <div class="learning-announcement-null text-center">
                             <div class="offset-lg-2 col-lg-8">
-                                <h1>{{ __('No announcements') }}</h1>
-                                <p>{{ __('No announcement detail') }}</p>
+                                <h1><?php echo e(__('No announcements')); ?></h1>
+                                <p><?php echo e(__('No announcement detail')); ?></p>
                             </div>
                         </div>
-                    @else
+                    <?php else: ?>
                         <div class="learning-announcement text-center">
                             <div class="col-lg-12">
                                 <div id="accordion" class="second-accordion">
                                     
-                                    @foreach($announsments as $announsment)
-                                    @if($announsment->status == 1)
+                                    <?php $__currentLoopData = $announsments; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $announsment): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <?php if($announsment->status == 1): ?>
                                     <div class="card btm-30">
-                                        <div class="card-header" id="headingFive{{ $announsment->id }}">
+                                        <div class="card-header" id="headingFive<?php echo e($announsment->id); ?>">
                                             <div class="mb-0">
-                                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapseFive{{ $announsment->id }}" aria-expanded="true" aria-controls="collapseFive">
-                                                    <div class="learning-questions-img rgt-20">{{ str_limit($announsment->user->fname, $limit = 1, $end = '') }}{{ str_limit($announsment->user->lname, $limit = 1, $end = '') }}
+                                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapseFive<?php echo e($announsment->id); ?>" aria-expanded="true" aria-controls="collapseFive">
+                                                    <div class="learning-questions-img rgt-20"><?php echo e(str_limit($announsment->user->fname, $limit = 1, $end = '')); ?><?php echo e(str_limit($announsment->user->lname, $limit = 1, $end = '')); ?>
+
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-lg-6">
-                                                            <div class="section"><a href="#" title="questions">{{ $announsment->user->fname }} {{ $announsment->user->lname }}</a> <a href="#" title="questions">{{ date('jS F Y', strtotime($announsment->created_at)) }}</a></div>
+                                                            <div class="section"><a href="#" title="questions"><?php echo e($announsment->user->fname); ?> <?php echo e($announsment->user->lname); ?></a> <a href="#" title="questions"><?php echo e(date('jS F Y', strtotime($announsment->created_at))); ?></a></div>
                                                         </div>
                                                         <div class="col-lg-6">
                                                             <div class="section-dividation text-right">
@@ -1216,7 +1241,8 @@
                                                     <div class="row">
                                                         <div class="col-lg-12 col-9 offset-sm-0 col-sm-12 offset-md-0 col-md-12"> 
                                                             <div class="profile-heading profile-heading-one">
-                                                                {{ __('Announcements') }}
+                                                                <?php echo e(__('Announcements')); ?>
+
                                                             </div>
                                                         </div>
 
@@ -1224,35 +1250,35 @@
                                                 </button>
                                             </div>
                                         </div>
-                                        <div id="collapseFive{{ $announsment->id }}" class="collapse" aria-labelledby="headingFive" data-parent="#accordion">
+                                        <div id="collapseFive<?php echo e($announsment->id); ?>" class="collapse" aria-labelledby="headingFive" data-parent="#accordion">
                                             <div class="card-body">
-                                                <p>{!! $announsment->announsment !!}</p>
+                                                <p><?php echo $announsment->announsment; ?></p>
                                             </div>
                                         </div>
                                     </div>
-                                    @endif
-                                    @endforeach
+                                    <?php endif; ?>
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 </div>
                             </div>
                         </div>
-                    @endif
+                    <?php endif; ?>
                 </div>
 
                 <div class="tab-pane fade" id="nav-quiz" role="tabpanel" aria-labelledby="nav-quiz-tab">
                     <div class="container-xl">
                         <div class="quiz-main-block">
 
-                          <h5>{{ __('Objective') }}</h5>
+                          <h5><?php echo e(__('Objective')); ?></h5>
                           <div class="row">
-                            @php 
+                            <?php 
                                 $topics = App\QuizTopic::where('course_id', $course->id)->where('type', NULL)->get();
-                            @endphp
+                            ?>
                             
-                            @if(count($topics)>0 )
-                              @foreach ($topics as $topic)
-                              @if($topic->status == 1)
+                            <?php if(count($topics)>0 ): ?>
+                              <?php $__currentLoopData = $topics; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $topic): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                              <?php if($topic->status == 1): ?>
 
-                                @if(Auth::User()->role == 'instructor' || Auth::User()->role == 'user')
+                                <?php if(Auth::User()->role == 'instructor' || Auth::User()->role == 'user'): ?>
                                 <?php 
                                     $order = App\Order::where('course_id', $course->id)->where('user_id', '=', Auth::user()->id)->first();
 
@@ -1284,61 +1310,64 @@
                                         }
                                 ?>
 
-                                @else
+                                <?php else: ?>
 
                                 <?php 
                                     
                                     $startDate = '0';
                                 ?>
-                                @endif
+                                <?php endif; ?>
 
 
-                                @php
+                                <?php
                                     $mytime = Carbon\Carbon::now();
-                                @endphp
+                                ?>
 
                                
                                
-                                @if($mytime >= $startDate)
+                                <?php if($mytime >= $startDate): ?>
                               
                                 <div class="col-md-6 col-lg-4">
                                   <div class="topic-block">
                                     <div class="card blue-grey darken-1">
                                       <div class="card-content dark-text">
-                                        <span class="card-title">{{$topic->title}}</span>
-                                        <p title="{{$topic->description}}">{{str_limit($topic->description, 120)}}</p>
+                                        <span class="card-title"><?php echo e($topic->title); ?></span>
+                                        <p title="<?php echo e($topic->description); ?>"><?php echo e(str_limit($topic->description, 120)); ?></p>
                                         <div class="row">
                                           <div class="col-lg-6 col-7">
                                             <ul class="topic-detail one-topic-detail">
-                                              <li>{{ __('Per Question Mark') }}<i class="fa fa-long-arrow-right"></i></li>
-                                              <li>{{ __('Total Marks') }}<i class="fa fa-long-arrow-right"></i></li>
-                                              <li>{{ __('Total Questions') }}<i class="fa fa-long-arrow-right"></i></li>
-                                              <li>{{ __('Quiz Price') }}<i class="fa fa-long-arrow-right"></i></li>
+                                              <li><?php echo e(__('Per Question Mark')); ?><i class="fa fa-long-arrow-right"></i></li>
+                                              <li><?php echo e(__('Total Marks')); ?><i class="fa fa-long-arrow-right"></i></li>
+                                              <li><?php echo e(__('Total Questions')); ?><i class="fa fa-long-arrow-right"></i></li>
+                                              <li><?php echo e(__('Quiz Price')); ?><i class="fa fa-long-arrow-right"></i></li>
                                             </ul>
                                           </div>
                                           <div class="col-lg-6 col-5">
                                             <ul class="topic-detail two-topic-detail">
-                                              <li>{{$topic->per_q_mark}}</li>
+                                              <li><?php echo e($topic->per_q_mark); ?></li>
                                               <li>
-                                                @php
+                                                <?php
                                                     $qu_count = 0;
                                                     $quizz = App\Quiz::get();
-                                                @endphp
-                                                @foreach($quizz as $quiz)
-                                                  @if($quiz->topic_id == $topic->id)
-                                                    @php 
+                                                ?>
+                                                <?php $__currentLoopData = $quizz; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $quiz): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                  <?php if($quiz->topic_id == $topic->id): ?>
+                                                    <?php 
                                                       $qu_count++;
-                                                    @endphp
-                                                  @endif
-                                                @endforeach
-                                                {{$topic->per_q_mark*$qu_count}}
+                                                    ?>
+                                                  <?php endif; ?>
+                                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                <?php echo e($topic->per_q_mark*$qu_count); ?>
+
                                               </li>
                                               <li>
-                                                {{$qu_count}}
+                                                <?php echo e($qu_count); ?>
+
                                               </li>
                                               
                                               <li>
-                                                {{ __('Free') }}
+                                                <?php echo e(__('Free')); ?>
+
                                               </li>
 
                                             </ul>
@@ -1349,24 +1378,24 @@
 
                                    <div class="card-action text-center">
 
-                                      @php
+                                      <?php
                                         $users =  App\QuizAnswer::where('topic_id',$topic->id)->where('user_id',Auth::user()->id)->first();
                                         $quiz_question =  App\Quiz::where('course_id',$course->id)->get();
 
-                                      @endphp
-                                      @if(empty($users))
-                                        @if($quiz_question != null || $quiz_question!= '')
+                                      ?>
+                                      <?php if(empty($users)): ?>
+                                        <?php if($quiz_question != null || $quiz_question!= ''): ?>
                                          
-                                            <a href="{{route('start_quiz', ['id' => $topic->id])}}" class="btn btn-block" title="Start Quiz"> {{ __('Start Quiz') }}</a>
+                                            <a href="<?php echo e(route('start_quiz', ['id' => $topic->id])); ?>" class="btn btn-block" title="Start Quiz"> <?php echo e(__('Start Quiz')); ?></a>
                                         
-                                        @endif
-                                      @else
-                                         <a href="{{route('start.quiz.show',$topic->id)}}" class="btn btn-block">{{ __('Show Quiz Report') }} </a>
+                                        <?php endif; ?>
+                                      <?php else: ?>
+                                         <a href="<?php echo e(route('start.quiz.show',$topic->id)); ?>" class="btn btn-block"><?php echo e(__('Show Quiz Report')); ?> </a>
                                        
-                                        @if($topic->quiz_again == '1')
-                                         <a href="{{route('tryagain',$topic->id)}}" class="btn btn-block">{{ __('Try Again') }} </a>
-                                        @endif
-                                      @endif
+                                        <?php if($topic->quiz_again == '1'): ?>
+                                         <a href="<?php echo e(route('tryagain',$topic->id)); ?>" class="btn btn-block"><?php echo e(__('Try Again')); ?> </a>
+                                        <?php endif; ?>
+                                      <?php endif; ?>
                                         
                                       </div>
                                     
@@ -1374,31 +1403,31 @@
                                   </div>
                                 </div>
 
-                                @endif
+                                <?php endif; ?>
 
                                
-                              @endif
-                              @endforeach
-                            @else
+                              <?php endif; ?>
+                              <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                            <?php else: ?>
                                 
                                 <div class="learning-quiz-null text-center">
                                     <div class="col-lg-12">
-                                        <h1>{{ __('No quiz') }}</h1>
-                                        <p>{{ __('No quizs detail') }}</p>
+                                        <h1><?php echo e(__('No quiz')); ?></h1>
+                                        <p><?php echo e(__('No quizs detail')); ?></p>
                                     </div>
                                 </div> 
-                            @endif
+                            <?php endif; ?>
                           </div>
-                          <h5>{{ __('Subjective') }}</h5>
+                          <h5><?php echo e(__('Subjective')); ?></h5>
                           <div class="row">
-                            @php 
+                            <?php 
                                 $topics = App\QuizTopic::where('course_id', $course->id)->where('type', '1')->get();
-                            @endphp
-                            @if(count($topics)>0 )
-                              @foreach ($topics as $topic)
-                              @if($topic->status == 1)
+                            ?>
+                            <?php if(count($topics)>0 ): ?>
+                              <?php $__currentLoopData = $topics; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $topic): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                              <?php if($topic->status == 1): ?>
 
-                                @if(Auth::User()->role == 'instructor' || Auth::User()->role == 'user')
+                                <?php if(Auth::User()->role == 'instructor' || Auth::User()->role == 'user'): ?>
                                 <?php 
                                     $order = App\Order::where('course_id', $course->id)->where('user_id', '=', Auth::user()->id)->first();
 
@@ -1430,61 +1459,64 @@
                                         }
                                 ?>
 
-                                @else
+                                <?php else: ?>
 
                                 <?php 
                                     
                                     $startDate = '0';
                                 ?>
-                                @endif
+                                <?php endif; ?>
 
 
-                                @php
+                                <?php
                                     $mytime = Carbon\Carbon::now();
-                                @endphp
+                                ?>
 
                                
                                
-                                @if($mytime >= $startDate)
+                                <?php if($mytime >= $startDate): ?>
                               
                                 <div class="col-md-6 col-lg-4">
                                   <div class="topic-block">
                                     <div class="card blue-grey darken-1">
                                       <div class="card-content dark-text">
-                                        <span class="card-title">{{$topic->title}}</span>
-                                        <p title="{{$topic->description}}">{{str_limit($topic->description, 120)}}</p>
+                                        <span class="card-title"><?php echo e($topic->title); ?></span>
+                                        <p title="<?php echo e($topic->description); ?>"><?php echo e(str_limit($topic->description, 120)); ?></p>
                                         <div class="row">
                                           <div class="col-lg-6 col-7">
                                             <ul class="topic-detail one-topic-detail">
-                                              <li>{{ __('Per Question Mark') }}<i class="fa fa-long-arrow-right"></i></li>
-                                              <li>{{ __('Total Marks') }}<i class="fa fa-long-arrow-right"></i></li>
-                                              <li>{{ __('Total Questions') }}<i class="fa fa-long-arrow-right"></i></li>
-                                              <li>{{ __('Quiz Price') }}<i class="fa fa-long-arrow-right"></i></li>
+                                              <li><?php echo e(__('Per Question Mark')); ?><i class="fa fa-long-arrow-right"></i></li>
+                                              <li><?php echo e(__('Total Marks')); ?><i class="fa fa-long-arrow-right"></i></li>
+                                              <li><?php echo e(__('Total Questions')); ?><i class="fa fa-long-arrow-right"></i></li>
+                                              <li><?php echo e(__('Quiz Price')); ?><i class="fa fa-long-arrow-right"></i></li>
                                             </ul>
                                           </div>
                                           <div class="col-lg-6 col-5">
                                             <ul class="topic-detail two-topic-detail">
-                                              <li>{{$topic->per_q_mark}}</li>
+                                              <li><?php echo e($topic->per_q_mark); ?></li>
                                               <li>
-                                                @php
+                                                <?php
                                                     $qu_count = 0;
                                                     $quizz = App\Quiz::get();
-                                                @endphp
-                                                @foreach($quizz as $quiz)
-                                                  @if($quiz->topic_id == $topic->id)
-                                                    @php 
+                                                ?>
+                                                <?php $__currentLoopData = $quizz; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $quiz): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                  <?php if($quiz->topic_id == $topic->id): ?>
+                                                    <?php 
                                                       $qu_count++;
-                                                    @endphp
-                                                  @endif
-                                                @endforeach
-                                                {{$topic->per_q_mark*$qu_count}}
+                                                    ?>
+                                                  <?php endif; ?>
+                                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                <?php echo e($topic->per_q_mark*$qu_count); ?>
+
                                               </li>
                                               <li>
-                                                {{$qu_count}}
+                                                <?php echo e($qu_count); ?>
+
                                               </li>
                                               
                                               <li>
-                                                {{ __('Free') }}
+                                                <?php echo e(__('Free')); ?>
+
                                               </li>
 
                                             </ul>
@@ -1495,24 +1527,24 @@
 
                                    <div class="card-action text-center">
 
-                                      @php
+                                      <?php
                                         $users =  App\QuizAnswer::where('topic_id',$topic->id)->where('user_id',Auth::user()->id)->first();
                                         $quiz_question =  App\Quiz::where('course_id',$course->id)->get();
 
-                                      @endphp
-                                      @if(empty($users))
-                                        @if($quiz_question != null || $quiz_question!= '')
+                                      ?>
+                                      <?php if(empty($users)): ?>
+                                        <?php if($quiz_question != null || $quiz_question!= ''): ?>
                                          
-                                            <a href="{{route('sub_start_quiz', ['id' => $topic->id])}}" class="btn btn-block" title="Start Quiz"> {{ __('Start Quiz') }}</a>
+                                            <a href="<?php echo e(route('sub_start_quiz', ['id' => $topic->id])); ?>" class="btn btn-block" title="Start Quiz"> <?php echo e(__('Start Quiz')); ?></a>
                                         
-                                        @endif
-                                      @else
-                                         <a href="{{route('sub.start.quiz.show',$topic->id)}}" class="btn btn-block">{{ __('Show Quiz Report') }} </a>
+                                        <?php endif; ?>
+                                      <?php else: ?>
+                                         <a href="<?php echo e(route('sub.start.quiz.show',$topic->id)); ?>" class="btn btn-block"><?php echo e(__('Show Quiz Report')); ?> </a>
                                        
-                                        @if($topic->quiz_again == '1')
-                                         <a href="{{route('sub.tryagain',$topic->id)}}" class="btn btn-block">{{ __('Try Again') }} </a>
-                                        @endif
-                                      @endif
+                                        <?php if($topic->quiz_again == '1'): ?>
+                                         <a href="<?php echo e(route('sub.tryagain',$topic->id)); ?>" class="btn btn-block"><?php echo e(__('Try Again')); ?> </a>
+                                        <?php endif; ?>
+                                      <?php endif; ?>
                                         
                                       </div>
                                     
@@ -1520,20 +1552,20 @@
                                   </div>
                                 </div>
 
-                                @endif
+                                <?php endif; ?>
 
                                
-                              @endif
-                              @endforeach
-                            @else
+                              <?php endif; ?>
+                              <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                            <?php else: ?>
                                 
                                 <div class="learning-quiz-null text-center">
                                     <div class="col-lg-12">
-                                        <h1>{{ __('No quiz') }}</h1>
-                                        <p>{{ __('No quiz detail') }}</p>
+                                        <h1><?php echo e(__('No quiz')); ?></h1>
+                                        <p><?php echo e(__('No quiz detail')); ?></p>
                                     </div>
                                 </div> 
-                            @endif
+                            <?php endif; ?>
                           </div>
                         </div>
                     </div>
@@ -1542,13 +1574,13 @@
                 <div class="tab-pane fade" id="nav-assign" role="tabpanel" aria-labelledby="nav-assign-tab">
                     <div class="container-xl">
                         <div class="assignment-main-block">
-                            <h3>{{ __('Your Assignments') }}</h3>
+                            <h3><?php echo e(__('Your Assignments')); ?></h3>
                           <div class="row">
 
                             <div class="col-md-8">
 
                                 <div class="row">
-                                @foreach($assignment as $assign)
+                                <?php $__currentLoopData = $assignment; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $assign): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                     <div class="col-md-12">
                                         <div class="assignment-tab-block">
                                             <div class="categories-block assign-tab-one text-center">
@@ -1558,22 +1590,23 @@
                                                         <div class="row">
 
                                                         <div class="col-lg-6 col-md-6">
-                                                        @if($assign->type == 1)
-                                                         <a href="" data-toggle="tooltip" data-placement="top" title="{{ $assign->rating }}/10 scores"><i data-feather="check-circle" title="Approved"></i></a>
-                                                        @else
+                                                        <?php if($assign->type == 1): ?>
+                                                         <a href="" data-toggle="tooltip" data-placement="top" title="<?php echo e($assign->rating); ?>/10 scores"><i data-feather="check-circle" title="Approved"></i></a>
+                                                        <?php else: ?>
                                                         <i data-feather="x-circle" title="Pending"></i>
-                                                        @endif
-                                                        <span>{{ __('Title') }}:{{ $assign->title }}</span>
+                                                        <?php endif; ?>
+                                                        <span><?php echo e(__('Title')); ?>:<?php echo e($assign->title); ?></span>
                                                         </div>
                                                          <div class="col-lg-6 col-md-6">
                                                             <div class="assignment-delete-block text-right">
 
-                                                            <a href="{{ asset('files/assignment/'.$assign->assignment) }}" download="{{$assign->assignment}}" title="{{ __('Download')}}"> <i data-feather="download"></i></a>
+                                                            <a href="<?php echo e(asset('files/assignment/'.$assign->assignment)); ?>" download="<?php echo e($assign->assignment); ?>" title="<?php echo e(__('Download')); ?>"> <i data-feather="download"></i></a>
                                                             
-                                                            <form  method="post" action="{{url('assignment/delete/'.$assign->id)}}" ata-parsley-validate class="form-horizontal form-label-left">
-                                                            {{ csrf_field() }}
+                                                            <form  method="post" action="<?php echo e(url('assignment/delete/'.$assign->id)); ?>" ata-parsley-validate class="form-horizontal form-label-left">
+                                                            <?php echo e(csrf_field()); ?>
 
-                                                                <button  type="submit" class="assign-remove-btn display-inline" title="{{ __('Delete')}}"> <i data-feather="trash-2"></i></button>
+
+                                                                <button  type="submit" class="assign-remove-btn display-inline" title="<?php echo e(__('Delete')); ?>"> <i data-feather="trash-2"></i></button>
                                                               </form>
                                                             </div>
                                                         </div>
@@ -1590,7 +1623,7 @@
                                         </div>
                                     </div>
                                 
-                                @endforeach
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -1598,7 +1631,8 @@
                                 <div class="contact-search-block btm-40">
                                     
                                     <div class="udemy-contact-btn text-center">
-                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#assignmodel">{{ __('Submit Assignment') }}
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#assignmodel"><?php echo e(__('Submit Assignment')); ?>
+
                                         </button>
                                     </div>
 
@@ -1608,43 +1642,45 @@
                                         <div class="modal-dialog modal-lg" role="document">
                                           <div class="modal-content">
                                             <div class="modal-header">
-                                              <h4 class="modal-title" id="myModalLabel">{{ __('Submit Assignment') }}</h4>
+                                              <h4 class="modal-title" id="myModalLabel"><?php echo e(__('Submit Assignment')); ?></h4>
                                               <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                             </div>
                                             <div class="box box-primary">
                                               <div class="panel panel-sum">
                                                 <div class="modal-body">
-                                                    <form id="demo-form2" method="post" action="{{ route('assignment.submit', $course->id) }}" data-parsley-validate class="form-horizontal form-label-left" enctype="multipart/form-data">
-                                                        {{ csrf_field() }}
+                                                    <form id="demo-form2" method="post" action="<?php echo e(route('assignment.submit', $course->id)); ?>" data-parsley-validate class="form-horizontal form-label-left" enctype="multipart/form-data">
+                                                        <?php echo e(csrf_field()); ?>
 
-                                                        <input type="hidden" name="user_id"  value="{{ Auth::user()->id }}" />
 
-                                                        <input type="hidden" name="instructor_id"  value="{{ $course->user_id }}" />
+                                                        <input type="hidden" name="user_id"  value="<?php echo e(Auth::user()->id); ?>" />
+
+                                                        <input type="hidden" name="instructor_id"  value="<?php echo e($course->user_id); ?>" />
                                                                 
                                                         <div class="row">
                                                           <div class="col-md-12">
 
                                                             <div class="form-group">
-                                                                <label for="exampleInputDetails">{{ __('Chapter Name') }}:<sup class="redstar">*</sup></label>
+                                                                <label for="exampleInputDetails"><?php echo e(__('Chapter Name')); ?>:<sup class="redstar">*</sup></label>
                                                                 <select style="width: 100%" name="course_chapters" class="form-control js-example-basic-single" required>
                                                                 <option value="none" selected disabled hidden> 
-                                                                  {{ __('Select Chapter') }}
+                                                                  <?php echo e(__('Select Chapter')); ?>
+
                                                                 </option>
-                                                                  @foreach($course->chapter as $c)
-                                                                  <option value="{{ $c->id }}">{{ $c->chapter_name }}</option>
-                                                                  @endforeach
+                                                                  <?php $__currentLoopData = $course->chapter; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $c): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                                  <option value="<?php echo e($c->id); ?>"><?php echo e($c->chapter_name); ?></option>
+                                                                  <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                                                 </select>
                                                             </div>
 
                                                             <div class="form-group">
-                                                                <label for="title">{{ __('Title') }}:<sup class="redstar">*</sup></label>
+                                                                <label for="title"><?php echo e(__('Title')); ?>:<sup class="redstar">*</sup></label>
                                                                 <input type="text" class="form-control" name="title" id="title" placeholder="Please Enter Title" value="" required>
                                                             </div>
                                                                 
                                                             <div class="form-group">
                                                                 
                                                                 <div class="wrapper">
-                                                                   <label for="detail">{{ __('Assignment Upload') }}:<sup class="redstar">*</sup></label> 
+                                                                   <label for="detail"><?php echo e(__('Assignment Upload')); ?>:<sup class="redstar">*</sup></label> 
                                                                   <div class="file-upload">
                                                                     <input type="file" name="assignment" class="form-control" />
                                                                     <i class="fa fa-arrow-up"></i>
@@ -1658,7 +1694,7 @@
                                                         
                                                         <hr>
                                                         <div class="box-footer text-center">
-                                                         <button type="submit" class="btn btn-sm btn-primary">{{ __('Submit') }}</button>
+                                                         <button type="submit" class="btn btn-sm btn-primary"><?php echo e(__('Submit')); ?></button>
                                                         </div>
                                                     </form>
                                                 </div>
@@ -1678,35 +1714,36 @@
                 <div class="tab-pane fade" id="nav-appoint" role="tabpanel" aria-labelledby="nav-appoint-tab">
                     <div class="container-xl">
                         <div class="appointment-main-block">
-                            <h3>{{ __('Your Appointment') }}</h3>
+                            <h3><?php echo e(__('Your Appointment')); ?></h3>
                           <div class="row">
 
                             <div class="col-md-8">
-                                @foreach($appointment as $appoint)
+                                <?php $__currentLoopData = $appointment; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $appoint): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                     <div class="col-md-12">
                                         <div class="assignment-tab-block">
                                             <div class="categories-block assign-tab-one text-center">
                                                 <ul>
-                                                    <li class="btm-5"><span>{{ $appoint->title }}</span></li>
-                                                    <li class="btm-5"><span>{!! $appoint->detail !!}</span></li>
+                                                    <li class="btm-5"><span><?php echo e($appoint->title); ?></span></li>
+                                                    <li class="btm-5"><span><?php echo $appoint->detail; ?></span></li>
                                                     <li>
                                                    
-                                                        <form  method="post" action="{{url('appointment/delete/'.$appoint->id)}}" ata-parsley-validate class="form-horizontal form-label-left">
-                                                        {{ csrf_field() }}
+                                                        <form  method="post" action="<?php echo e(url('appointment/delete/'.$appoint->id)); ?>" ata-parsley-validate class="form-horizontal form-label-left">
+                                                        <?php echo e(csrf_field()); ?>
 
-                                                        <button  type="submit" class="cart-remove-btn display-inline" title="{{ __('Remove From cart')}}"> {{ __('Delete') }}</button>
+
+                                                        <button  type="submit" class="cart-remove-btn display-inline" title="<?php echo e(__('Remove From cart')); ?>"> <?php echo e(__('Delete')); ?></button>
                                                       </form>
 
                                                     </li>
-                                                    @if($appoint->accept == 1)
-                                                    <li><a href="" data-toggle="modal" data-target="#myModalresponse" title="response">{{ __('Response')}}</a></li>
+                                                    <?php if($appoint->accept == 1): ?>
+                                                    <li><a href="" data-toggle="modal" data-target="#myModalresponse" title="response"><?php echo e(__('Response')); ?></a></li>
 
                                                     <div class="modal fade" id="myModalresponse" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                                                         <div class="modal-dialog modal-lg" role="document">
                                                           <div class="modal-content">
                                                             <div class="modal-header">
 
-                                                              <h4 class="modal-title" id="myModalLabel">{{ __('Response') }}</h4>
+                                                              <h4 class="modal-title" id="myModalLabel"><?php echo e(__('Response')); ?></h4>
                                                               <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                                             </div>
                                                             <div class="box box-primary">
@@ -1717,22 +1754,25 @@
                                                                         <li>
 
                                                                             <div class="instructor-img btm-30">
-                                                                                @if($appoint->user->user_img != null || $appoint->user->user_img !='')
-                                                                                <a href="{{ route('instructor.profile',  ['id' => $course->user->id, 'name' => $fullname]) }}" title="instructor"><img src="{{ asset('images/user_img/'.$appoint->instructor->user_img) }}" width="100px" height="100px" class="img-fluid img-circle"/></a>
-                                                                                @else
+                                                                                <?php if($appoint->user->user_img != null || $appoint->user->user_img !=''): ?>
+                                                                                <a href="<?php echo e(route('instructor.profile',  ['id' => $course->user->id, 'name' => $fullname])); ?>" title="instructor"><img src="<?php echo e(asset('images/user_img/'.$appoint->instructor->user_img)); ?>" width="100px" height="100px" class="img-fluid img-circle"/></a>
+                                                                                <?php else: ?>
 
-                                                                                <a href="{{ route('instructor.profile',  ['id' => $course->user->id, 'name' => $fullname]) }}" title="instructor"><img src="{{ asset('images/default/user.jpg')}}" width="100px" height="100px" class="img-fluid img-circle"/></a>
-                                                                                @endif
+                                                                                <a href="<?php echo e(route('instructor.profile',  ['id' => $course->user->id, 'name' => $fullname])); ?>" title="instructor"><img src="<?php echo e(asset('images/default/user.jpg')); ?>" width="100px" height="100px" class="img-fluid img-circle"/></a>
+                                                                                <?php endif; ?>
                                                                             </div>
                                                                         </li>
                                                                         <li>
-                                                                            {{ __('Instructor') }}: {{ $appoint->instructor->fname }} {{ $appoint->instructor->lname }}
+                                                                            <?php echo e(__('Instructor')); ?>: <?php echo e($appoint->instructor->fname); ?> <?php echo e($appoint->instructor->lname); ?>
+
                                                                         </li>
                                                                         <li>
-                                                                            {{ __('Email') }}: {{ $appoint->instructor->email }}
+                                                                            <?php echo e(__('Email')); ?>: <?php echo e($appoint->instructor->email); ?>
+
                                                                         </li>
                                                                         <li>
-                                                                            {{ __('Response') }}: {!! $appoint->reply !!}
+                                                                            <?php echo e(__('Response')); ?>: <?php echo $appoint->reply; ?>
+
                                                                         </li>
 
                                                                     </ul>
@@ -1744,49 +1784,51 @@
                                                           </div>
                                                         </div> 
                                                     </div>
-                                                    @endif
+                                                    <?php endif; ?>
                                                 </ul>
                                             </div>
                                         </div>
                                     </div>
                                 
-                                @endforeach
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </div>
                             <div class="col-md-4">
                                 <div class="contact-search-block btm-40">
                                     <div class="udemy-contact-btn text-center">
-                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#appointmodel">{{ __('Request Appointment') }}
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#appointmodel"><?php echo e(__('Request Appointment')); ?>
+
                                         </button>
                                     </div>
                                     <div class="modal fade" id="appointmodel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                                         <div class="modal-dialog modal-lg" role="document">
                                           <div class="modal-content">
                                             <div class="modal-header">
-                                              <h4 class="modal-title" id="myModalLabel">{{ __('Request Appointment') }}</h4>
+                                              <h4 class="modal-title" id="myModalLabel"><?php echo e(__('Request Appointment')); ?></h4>
                                               <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                             </div>
                                             <div class="box box-primary">
                                               <div class="panel panel-sum">
                                                 <div class="modal-body">
-                                                    <form id="demo-form2" method="post" action="{{ route('appointment.request', $course->id) }}" data-parsley-validate class="form-horizontal form-label-left" enctype="multipart/form-data">
-                                                        {{ csrf_field() }}
+                                                    <form id="demo-form2" method="post" action="<?php echo e(route('appointment.request', $course->id)); ?>" data-parsley-validate class="form-horizontal form-label-left" enctype="multipart/form-data">
+                                                        <?php echo e(csrf_field()); ?>
 
-                                                        <input type="hidden" name="user_id"  value="{{ Auth::user()->id }}" />
 
-                                                        <input type="hidden" name="instructor_id"  value="{{ $course->user_id }}" />
+                                                        <input type="hidden" name="user_id"  value="<?php echo e(Auth::user()->id); ?>" />
+
+                                                        <input type="hidden" name="instructor_id"  value="<?php echo e($course->user_id); ?>" />
                                                         
                                                         
                                                         <div class="row">
                                                           <div class="col-md-6">
                                                             <div class="form-group">
-                                                                <label for="title">{{ __('User') }}:<sup class="redstar">*</sup></label>
-                                                                <input type="text" name="fname" value="{{ Auth::user()->email }}" class="form-control" disabled />
+                                                                <label for="title"><?php echo e(__('User')); ?>:<sup class="redstar">*</sup></label>
+                                                                <input type="text" name="fname" value="<?php echo e(Auth::user()->email); ?>" class="form-control" disabled />
                                                             </div>
                                                           </div>
                                                           <div class="col-md-6">
                                                             <div class="form-group">
-                                                                <label for="title">{{ __('Instructor') }}:<sup class="redstar">*</sup></label>
-                                                                <input type="text" name="instructor" value="{{ $course->user->email }}" class="form-control" disabled/>
+                                                                <label for="title"><?php echo e(__('Instructor')); ?>:<sup class="redstar">*</sup></label>
+                                                                <input type="text" name="instructor" value="<?php echo e($course->user->email); ?>" class="form-control" disabled/>
                                                             </div>
                                                           </div>
                                                         </div>
@@ -1796,14 +1838,14 @@
                                                         <div class="row">
                                                           <div class="col-md-6">
                                                             <div class="form-group">
-                                                                <label for="title">{{ __('Title') }}:<sup class="redstar">*</sup></label>
+                                                                <label for="title"><?php echo e(__('Title')); ?>:<sup class="redstar">*</sup></label>
                                                                 <input type="text" class="form-control" name="title" id="title" placeholder="Please Enter Title" value="">
                                                             </div>
                                                           </div>
 
                                                           <div class="col-md-6">
                                                             <div class="form-group">
-                                                                <label for="title">{{ __('Date') }}:<sup class="redstar">*</sup></label>
+                                                                <label for="title"><?php echo e(__('Date')); ?>:<sup class="redstar">*</sup></label>
                                                                 <input type="datetime-local" class="form-control" id="date_time" name="date_time" placeholder="Please Enter Title" value="">
                                                             </div>
                                                           </div>
@@ -1812,7 +1854,7 @@
                                                         <div class="row">
                                                           <div class="col-md-12">
                                                             <div class="form-group">
-                                                                <label for="detail">{{ __('Detail') }}:<sup class="redstar">*</sup></label>
+                                                                <label for="detail"><?php echo e(__('Detail')); ?>:<sup class="redstar">*</sup></label>
                                                                 <textarea id="detail" name="detail" class="form-control" placeholder="Enter your details" value=""></textarea>
                                                             </div>
                                                           </div>
@@ -1820,7 +1862,7 @@
                                                         
                                                         <hr>
                                                         <div class="box-footer">
-                                                         <button type="submit" class="btn btn-sm btn-primary">{{ __('Submit') }}</button>
+                                                         <button type="submit" class="btn btn-sm btn-primary"><?php echo e(__('Submit')); ?></button>
                                                         </div>
                                                     </form>
                                                 </div>
@@ -1836,19 +1878,19 @@
                     </div>
                 </div>
 
-                @if(count($papers) > 0)
+                <?php if(count($papers) > 0): ?>
 
                 <div class="tab-pane fade" id="nav-paper" role="tabpanel" aria-labelledby="nav-paper-tab">
                     
                     <div class="assignment-main-block">
-                        <h3>{{ __('AllPapers') }}</h3>
+                        <h3><?php echo e(__('AllPapers')); ?></h3>
                       <div class="row">
 
                         <div class="col-md-12">
 
                             <div class="row">
-                            @foreach($papers as $paper)
-                            @if($paper->status == 1)
+                            <?php $__currentLoopData = $papers; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $paper): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <?php if($paper->status == 1): ?>
                                 <div class="col-md-12">
                                     <div class="assignment-tab-block">
                                         <div class="categories-block assign-tab-one text-center">
@@ -1866,14 +1908,15 @@
 
                                                                 <i class="far fa-check-circle" title="pending"></i>
 
-                                                                <span class="koh-faq-question-span">{{ __('Title') }}:{{ $paper->title }}</span>
+                                                                <span class="koh-faq-question-span"><?php echo e(__('Title')); ?>:<?php echo e($paper->title); ?></span>
 
-                                                                @if($paper->detail != NULL)
+                                                                <?php if($paper->detail != NULL): ?>
                                                                     <i class="fa fa-sort-down" aria-hidden="true"></i>
-                                                                @endif
+                                                                <?php endif; ?>
                                                               </div>
                                                               <div class="koh-faq-answer">
-                                                                {!! $paper->detail !!}
+                                                                <?php echo $paper->detail; ?>
+
                                                               </div>
                                                             </div>
                                                           </div>
@@ -1885,7 +1928,7 @@
                                                      <div class="col-md-6">
                                                         <div class="assignment-delete-block text-right">
 
-                                                        <a href="{{ asset('files/papers/'.$paper->file) }}" download="{{$paper->file}}" title="{{ __('Download')}}"> <i class="fa fa-download"></i></a>
+                                                        <a href="<?php echo e(asset('files/papers/'.$paper->file)); ?>" download="<?php echo e($paper->file); ?>" title="<?php echo e(__('Download')); ?>"> <i class="fa fa-download"></i></a>
                                                         
                                                     </div>
                                                 </div>
@@ -1895,8 +1938,8 @@
                                         </div>
                                     </div>
                                 </div>
-                            @endif
-                            @endforeach
+                            <?php endif; ?>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </div>
                         </div>
                         
@@ -1906,11 +1949,11 @@
                     
                 </div>
 
-                @endif
+                <?php endif; ?>
 
-                @if(Module::has('Homework') && Module::find('Homework')->isEnabled())
-                    @include('homework::front.homework_tab')
-                @endif
+                <?php if(Module::has('Homework') && Module::find('Homework')->isEnabled()): ?>
+                    <?php echo $__env->make('homework::front.homework_tab', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+                <?php endif; ?>
             </div>
                 
             
@@ -1918,9 +1961,9 @@
 </section>
 <!-- courses-content end -->
 
-@endsection
+<?php $__env->stopSection(); ?>
 
-@section('custom-script')
+<?php $__env->startSection('custom-script'); ?>
 <!-- iframe script -->
 <script>
 
@@ -1932,8 +1975,8 @@ $(document).bind('cbox_closed', function(){
   $.ajax({
 
         type : 'GET',
-        data : {userid : '{{ Auth::user()->id }}', chapterid : '{{ $course->id }}'},
-        url  : "{{ url('activestatus') }}",
+        data : {userid : '<?php echo e(Auth::user()->id); ?>', chapterid : '<?php echo e($course->id); ?>'},
+        url  : "<?php echo e(url('activestatus')); ?>",
         success : function(data){
             console.log(data);
 
@@ -2054,7 +2097,7 @@ $(document).bind('cbox_closed', function(){
 });
 </script>
 
-@endsection
+<?php $__env->stopSection(); ?>
 
 
 <style>
@@ -2069,3 +2112,4 @@ $(document).bind('cbox_closed', function(){
     }
 
 </style>
+<?php echo $__env->make('theme.master', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\laragon\www\magic\magic.exportica.in\resources\views/front/course_content.blade.php ENDPATH**/ ?>

@@ -387,6 +387,7 @@ class CourseclassController extends Controller
     public function show( $id)
     {
         
+
         $subtitles = Subtitle::where('c_id', $id)->get();
         $cate = CourseClass::find($id);
         $coursechapt = CourseChapter::where('course_id', $cate->course_id)->get();

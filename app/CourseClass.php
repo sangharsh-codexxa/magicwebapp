@@ -31,7 +31,7 @@ class CourseClass extends Model
 
     protected $fillable = [
         'course_id', 'coursechapter_id', 'title', 'duration', 'featured', 'status','url', 'size',
-        'image','video','pdf','zip', 'preview_video', 'preview_url', 'preview_type', 'date_time', 'audio', 'detail', 'position', 'aws_upload', 'type', 'user_id', 'file', 'drip_type', 'drip_date', 'drip_days'
+        'image','video','pdf','zip', 'preview_video', 'preview_url', 'preview_type', 'date_time', 'audio', 'detail', 'position', 'aws_upload', 'type', 'user_id', 'file', 'drip_type', 'drip_date', 'drip_days','video_completed_time'
     ];
 
     public function user()

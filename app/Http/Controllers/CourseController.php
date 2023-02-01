@@ -618,6 +618,9 @@ class CourseController extends Controller
 
         $countries = Allcountry::get();
 
+
+    
+
         return view('admin.course.show', compact('cor', 'course', 'courseinclude', 'whatlearns', 'coursechapters', 'coursechapter', 'relatedcourse', 'courseclass', 'announsments', 'reports', 'questions', 'quizes', 'topics', 'appointment', 'papers', 'users', 'countries'));
     }
 
@@ -705,6 +708,9 @@ class CourseController extends Controller
     public function CourseContentPage($id, $slug)
     {
         $course = Course::where('id', $id)->with(['user', 'chapter', 'chapter.courseclass'])->first();
+                
+        // $classes = CourseClass::where('id', $id)->where('user_id', '=', '1')->get();
+        // dd($classes);
 
         $coursequestions = Question::where('course_id', '=', $id)->with('user')->get();
 
