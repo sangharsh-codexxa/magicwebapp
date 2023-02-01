@@ -21,10 +21,13 @@ class WatchController extends Controller
 {
     public function watch($id)
     {
-       
 
         if(Auth::check())
         {
+
+
+
+       
         	$order = Order::where('status', '1')->where('user_id', Auth::User()->id)->where('course_id', $id)->first();
 
             $courses = Course::where('id', $id)->first();
@@ -32,6 +35,7 @@ class WatchController extends Controller
             $bundle = Order::where('user_id', Auth::User()->id)->where('bundle_id', '!=', NULL)->get();
 
             $gsetting = Setting::first();
+
 
             //attandance start
             if(!empty($order))
@@ -201,6 +205,13 @@ class WatchController extends Controller
 
     public function watchclass($id)
     {
+
+    //   CourseClass::where('course_id', $id)->where('user_id', '=', Auth::user()->id)->update([
+    //         'video_completed_time' => \Carbon\Carbon::now()->toDateTimeString(),
+    //         'updated_at'  => \Carbon\Carbon::now()->toDateTimeString()
+    //     ]);
+
+   
         $class = CourseClass::where('id',$id)->first();
 
         $courses = Course::where('id', $class->course_id)->first();

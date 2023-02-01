@@ -49,6 +49,15 @@ class WatchApiController extends Controller
                 $url = $class->iframe_url;
                 return view('iframe', compact('url', 'course'));
             }
+
+            // $dd = CourseClass::where('course_id', $id)->where('user_id', '=', Auth::user()->id)->update([
+            //     'video_completed_time' => \Carbon\Carbon::now()->toDateTimeString(),
+            //     'updated_at'  => \Carbon\Carbon::now()->toDateTimeString()
+            // ]);
+
+            // dd($dd);
+
+
             return view('classwatch', compact('class', 'user'));
          }
     }
