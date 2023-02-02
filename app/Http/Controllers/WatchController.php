@@ -214,7 +214,36 @@ class WatchController extends Controller
    
         $class = CourseClass::where('id',$id)->first();
 
+
+
+        $s = \DB::enableQueryLog();
+    
+      
+
+
         $courses = Course::where('id', $class->course_id)->first();
+
+    //   Auth::user()->id
+        CourseClass::where('id', $id)->where('user_id', '=', '1')->update([
+            'video_completed_time' => \Carbon\Carbon::now()->toDateTimeString(),
+            'updated_at' => \Carbon\Carbon::now()->toDateTimeString(),            
+        ]);
+
+
+$now = Carbon::now();
+$created_at = Carbon::parse($now);
+$diffHours = $created_at->diffInHours($class['video_completed_time']);  // 3 
+
+
+if($diffHours >= 36){
+    CourseClass::where('id', $id)->where('user_id', '=', '1')->update([
+        'status' => '0',            
+    ]);
+
+    return back();
+}
+
+
 
         if(Auth::check())
         { 
