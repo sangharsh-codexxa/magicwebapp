@@ -754,9 +754,12 @@
         </div>
         <div class="challenges masonry flex-row item-col-2">
             @foreach($workshops as $workshop)
-            @php
 
+            @php
             $days = Carbon\Carbon::parse($workshop->end_date)->diffInDays(Carbon\Carbon::parse($workshop->start_date));
+            <!-- $days = Carbon\Carbon::parse($workshop->end_date)->diffInDays(Carbon\Carbon::parse($workshop->start_date)); -->
+
+         
             @endphp
             <div class="item-col full-size">
                 <div class="ribbon ribbon-top-left"><span>{{$days}} days</span></div>
